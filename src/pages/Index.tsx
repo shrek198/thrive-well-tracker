@@ -7,7 +7,7 @@ import NutritionChart from '@/components/Dashboard/NutritionChart';
 import RecentWorkouts from '@/components/Dashboard/RecentWorkouts';
 import MealLog from '@/components/Dashboard/MealLog';
 import GoalProgress from '@/components/Dashboard/GoalProgress';
-import { Button } from '@/components/ui/card';
+import { Button } from '@/components/ui/button'; 
 import { Activity, PieChart, Calendar, Weight } from 'lucide-react';
 
 const Index = () => {

@@ -1,9 +1,8 @@
-
 import React from 'react';
 import { Card, CardContent, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Workout } from '@/types';
-import { Calendar, Clock, Weight } from 'lucide-react';
+import { Calendar, Clock, Weight, Activity } from 'lucide-react';
 
 interface WorkoutCardProps {
   workout: Workout;

@@ -1,7 +1,6 @@
-
 import React from 'react';
 import AuthForm from '@/components/Auth/AuthForm';
-import { Activity } from 'lucide-react';
+import { Activity, PieChart, Calendar } from 'lucide-react';
 
 const Auth = () => {
   return (
