@@ -1,5 +1,6 @@
 
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -16,6 +17,7 @@ import { Activity } from 'lucide-react';
 type AuthMode = 'login' | 'register';
 
 const AuthForm = () => {
+  const navigate = useNavigate();
   const [mode, setMode] = useState<AuthMode>('login');
   const [formData, setFormData] = useState({
     name: '',
@@ -33,10 +35,8 @@ const AuthForm = () => {
     // Mock authentication - would connect to backend in real app
     console.log('Form submitted:', formData);
     
-    // Simulate successful login
-    if (mode === 'login') {
-      window.location.href = '/';
-    }
+    // Simulate successful login/registration
+    navigate('/dashboard');
   };
 
   const toggleMode = () => {
