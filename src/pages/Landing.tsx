@@ -1,14 +1,117 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Activity, PieChart, Calendar, Weight } from 'lucide-react';
+import { Activity, PieChart, Calendar, Weight, Menu, User, ChevronDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { NavigationMenu, NavigationMenuContent, NavigationMenuItem, NavigationMenuLink, NavigationMenuList, NavigationMenuTrigger, navigationMenuTriggerStyle } from '@/components/ui/navigation-menu';
 
 const Landing = () => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const scrollToSection = (id: string) => {
+    const element = document.getElementById(id);
+    if (element) {
+      element.scrollIntoView({ behavior: 'smooth' });
+    }
+    setIsMenuOpen(false);
+  };
+
   return (
     <div className="min-h-screen flex flex-col">
-      {/* Hero Section */}
-      <header className="bg-fitness-primary text-white">
+      {/* Fixed Navbar */}
+      <nav className="fixed top-0 left-0 right-0 bg-white/95 shadow-sm z-50 backdrop-blur-sm">
+        <div className="container mx-auto px-4 py-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Activity className="h-8 w-8 text-fitness-primary" />
+              <span className="text-xl font-bold">FitTracker</span>
+            </div>
+            
+            {/* Desktop Navigation */}
+            <div className="hidden md:flex items-center space-x-1">
+              <NavigationMenu>
+                <NavigationMenuList>
+                  <NavigationMenuItem>
+                    <button 
+                      onClick={() => scrollToSection('features')} 
+                      className={navigationMenuTriggerStyle()}
+                    >
+                      Features
+                    </button>
+                  </NavigationMenuItem>
+                  <NavigationMenuItem>
+                    <button 
+                      onClick={() => scrollToSection('testimonials')} 
+                      className={navigationMenuTriggerStyle()}
+                    >
+                      Testimonials
+                    </button>
+                  </NavigationMenuItem>
+                  <NavigationMenuItem>
+                    <button 
+                      onClick={() => scrollToSection('register')} 
+                      className={navigationMenuTriggerStyle()}
+                    >
+                      Register
+                    </button>
+                  </NavigationMenuItem>
+                </NavigationMenuList>
+              </NavigationMenu>
+              
+              <div className="ml-4">
+                <Button asChild variant="outline">
+                  <Link to="/auth">Log In</Link>
+                </Button>
+              </div>
+            </div>
+            
+            {/* Mobile menu button */}
+            <div className="md:hidden">
+              <Button variant="ghost" size="icon" onClick={() => setIsMenuOpen(!isMenuOpen)}>
+                <Menu />
+              </Button>
+            </div>
+          </div>
+          
+          {/* Mobile menu */}
+          {isMenuOpen && (
+            <div className="md:hidden py-4 pt-2">
+              <div className="flex flex-col space-y-2">
+                <button 
+                  onClick={() => scrollToSection('features')} 
+                  className="px-3 py-2 rounded-md hover:bg-gray-100"
+                >
+                  Features
+                </button>
+                <button 
+                  onClick={() => scrollToSection('testimonials')} 
+                  className="px-3 py-2 rounded-md hover:bg-gray-100"
+                >
+                  Testimonials
+                </button>
+                <button 
+                  onClick={() => scrollToSection('register')} 
+                  className="px-3 py-2 rounded-md hover:bg-gray-100"
+                >
+                  Register
+                </button>
+                <Link 
+                  to="/auth" 
+                  className="px-3 py-2 rounded-md hover:bg-gray-100 text-fitness-primary"
+                >
+                  Log In
+                </Link>
+              </div>
+            </div>
+          )}
+        </div>
+      </nav>
+
+      {/* Hero Section with padding for navbar */}
+      <header className="bg-fitness-primary text-white pt-20">
         <div className="container mx-auto px-4 py-16 md:py-24">
           <div className="max-w-3xl mx-auto text-center">
             <div className="flex justify-center mb-6">
@@ -20,8 +123,8 @@ const Landing = () => {
               <Button asChild className="text-lg px-8 py-6" size="lg">
                 <Link to="/auth">Get Started</Link>
               </Button>
-              <Button asChild variant="outline" className="text-lg px-8 py-6 bg-white/10 text-white hover:bg-white/20" size="lg">
-                <a href="#features">Learn More</a>
+              <Button asChild variant="outline" className="text-lg px-8 py-6 bg-white/10 text-white hover:bg-white/20" size="lg" onClick={() => scrollToSection('features')}>
+                <button>Learn More</button>
               </Button>
             </div>
           </div>
@@ -29,7 +132,7 @@ const Landing = () => {
       </header>
 
       {/* Features Section */}
-      <section id="features" className="py-16 bg-white">
+      <section id="features" className="py-16 bg-white scroll-mt-20">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold text-center mb-12">Everything You Need To Reach Your Fitness Goals</h2>
           
@@ -62,7 +165,7 @@ const Landing = () => {
       </section>
 
       {/* Testimonials Section */}
-      <section className="py-16 bg-gray-50">
+      <section id="testimonials" className="py-16 bg-gray-50 scroll-mt-20">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold text-center mb-12">What Our Users Say</h2>
           
@@ -103,6 +206,46 @@ const Landing = () => {
         </div>
       </section>
 
+      {/* Registration Section */}
+      <section id="register" className="py-16 bg-white scroll-mt-20">
+        <div className="container mx-auto px-4">
+          <h2 className="text-3xl font-bold text-center mb-12">Join FitTracker Today</h2>
+          
+          <div className="max-w-md mx-auto">
+            <Card>
+              <CardHeader>
+                <CardTitle>Create your account</CardTitle>
+                <CardDescription>
+                  Start your fitness journey with FitTracker
+                </CardDescription>
+              </CardHeader>
+              <CardContent>
+                <form className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="name">Full Name</Label>
+                    <Input id="name" placeholder="John Doe" />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="email">Email</Label>
+                    <Input id="email" type="email" placeholder="john@example.com" />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="password">Password</Label>
+                    <Input id="password" type="password" />
+                  </div>
+                  <Button asChild className="w-full" type="submit">
+                    <Link to="/auth">Register Now</Link>
+                  </Button>
+                  <p className="text-center text-sm text-gray-500 mt-4">
+                    Already have an account? <Link to="/auth" className="text-fitness-primary hover:underline">Log in</Link>
+                  </p>
+                </form>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </section>
+
       {/* CTA Section */}
       <section className="py-16 bg-fitness-primary text-white">
         <div className="container mx-auto px-4 text-center">
@@ -130,9 +273,9 @@ const Landing = () => {
               <div>
                 <h5 className="font-semibold mb-4">Features</h5>
                 <ul className="space-y-2">
-                  <li><a href="#" className="text-gray-400 hover:text-white">Workout Tracking</a></li>
-                  <li><a href="#" className="text-gray-400 hover:text-white">Nutrition Monitoring</a></li>
-                  <li><a href="#" className="text-gray-400 hover:text-white">Progress Visualization</a></li>
+                  <li><button onClick={() => scrollToSection('features')} className="text-gray-400 hover:text-white">Workout Tracking</button></li>
+                  <li><button onClick={() => scrollToSection('features')} className="text-gray-400 hover:text-white">Nutrition Monitoring</button></li>
+                  <li><button onClick={() => scrollToSection('features')} className="text-gray-400 hover:text-white">Progress Visualization</button></li>
                 </ul>
               </div>
               
