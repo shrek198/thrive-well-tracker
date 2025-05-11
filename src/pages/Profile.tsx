@@ -7,8 +7,32 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Activity, Award, Calendar, Camera, Edit, Trophy, User } from 'lucide-react';
 import { Progress } from '@/components/ui/progress';
+import { useToast } from '@/hooks/use-toast';
 
 const Profile = () => {
+  const { toast } = useToast();
+  
+  const handleEditProfile = () => {
+    toast({
+      title: "Edit Profile",
+      description: "Profile editing mode activated",
+    });
+  };
+  
+  const handleAddGoal = () => {
+    toast({
+      title: "New Goal",
+      description: "Add your new fitness goal",
+    });
+  };
+  
+  const handleAddPhoto = () => {
+    toast({
+      title: "Add Photo",
+      description: "Upload a new progress photo",
+    });
+  };
+
   return (
     <AppLayout>
       <div className="mb-6 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
@@ -22,7 +46,7 @@ const Profile = () => {
             <p className="text-muted-foreground">Fitness Enthusiast</p>
           </div>
         </div>
-        <Button className="w-full md:w-auto" size="sm">
+        <Button className="w-full md:w-auto" size="sm" onClick={handleEditProfile}>
           <Edit className="mr-2 h-4 w-4" /> Edit Profile
         </Button>
       </div>
@@ -111,7 +135,7 @@ const Profile = () => {
                   <p className="text-xs text-muted-foreground mt-1">Current best: 6 pull-ups</p>
                 </div>
                 
-                <Button size="sm" variant="outline" className="w-full">
+                <Button size="sm" variant="outline" className="w-full" onClick={handleAddGoal}>
                   Add New Goal
                 </Button>
               </CardContent>
@@ -190,23 +214,23 @@ const Profile = () => {
                 <CardTitle>Progress Photos</CardTitle>
                 <CardDescription>Visual record of your fitness journey</CardDescription>
               </div>
-              <Button size="sm" variant="outline" className="gap-2">
+              <Button size="sm" variant="outline" className="gap-2" onClick={handleAddPhoto}>
                 <Camera className="h-4 w-4" /> Add Photo
               </Button>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                <div className="aspect-square bg-gray-100 rounded-md flex items-center justify-center">
-                  <Camera className="h-8 w-8 text-gray-400" />
+                <div className="aspect-square bg-muted rounded-md flex items-center justify-center">
+                  <Camera className="h-8 w-8 text-muted-foreground" />
                 </div>
-                <div className="aspect-square bg-gray-100 rounded-md flex items-center justify-center">
-                  <Camera className="h-8 w-8 text-gray-400" />
+                <div className="aspect-square bg-muted rounded-md flex items-center justify-center">
+                  <Camera className="h-8 w-8 text-muted-foreground" />
                 </div>
-                <div className="aspect-square bg-gray-100 rounded-md flex items-center justify-center">
-                  <Camera className="h-8 w-8 text-gray-400" />
+                <div className="aspect-square bg-muted rounded-md flex items-center justify-center">
+                  <Camera className="h-8 w-8 text-muted-foreground" />
                 </div>
-                <div className="aspect-square bg-gray-100 rounded-md flex items-center justify-center">
-                  <Camera className="h-8 w-8 text-gray-400" />
+                <div className="aspect-square bg-muted rounded-md flex items-center justify-center">
+                  <Camera className="h-8 w-8 text-muted-foreground" />
                 </div>
               </div>
             </CardContent>

@@ -8,9 +8,20 @@ import RecentWorkouts from '@/components/Dashboard/RecentWorkouts';
 import MealLog from '@/components/Dashboard/MealLog';
 import GoalProgress from '@/components/Dashboard/GoalProgress';
 import { Button } from '@/components/ui/button'; 
-import { Activity, PieChart, Calendar, Weight } from 'lucide-react';
+import { Activity, PieChart, Calendar, Weight, Plus } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { useToast } from '@/hooks/use-toast';
 
 const Index = () => {
+  const { toast } = useToast();
+
+  const handleLogMeal = () => {
+    toast({
+      title: "Add Meal",
+      description: "Log your meal intake",
+    });
+  };
+
   return (
     <AppLayout>
       <div className="mb-6">
@@ -50,6 +61,18 @@ const Index = () => {
       <div className="grid md:grid-cols-2 gap-6 mb-6">
         <ActivityChart />
         <NutritionChart />
+      </div>
+
+      {/* Quick Actions */}
+      <div className="flex gap-4 mb-6">
+        <Button asChild variant="outline" className="gap-2">
+          <Link to="/workouts">
+            <Activity className="w-4 h-4" /> View All Workouts
+          </Link>
+        </Button>
+        <Button variant="outline" className="gap-2" onClick={handleLogMeal}>
+          <Plus className="w-4 h-4" /> Log Meal
+        </Button>
       </div>
 
       {/* Recent Activities and Goals */}

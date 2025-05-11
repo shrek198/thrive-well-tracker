@@ -1,5 +1,6 @@
 
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import AppLayout from '@/components/Layout/AppLayout';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -7,8 +8,60 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Switch } from '@/components/ui/switch';
+import { useTheme } from '@/context/ThemeContext';
+import { useToast } from '@/hooks/use-toast';
 
 const Settings = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const tab = searchParams.get('tab') || 'account';
+  const { theme, setTheme } = useTheme();
+  const { toast } = useToast();
+  
+  const handleTabChange = (value: string) => {
+    setSearchParams({ tab: value });
+  };
+  
+  useEffect(() => {
+    // Scroll to top when tab changes
+    window.scrollTo(0, 0);
+  }, [tab]);
+
+  const handleSaveChanges = () => {
+    toast({
+      title: "Changes saved",
+      description: "Your changes have been successfully saved.",
+    });
+  };
+  
+  const handleUpdatePassword = () => {
+    toast({
+      title: "Password updated",
+      description: "Your password has been successfully updated.",
+    });
+  };
+  
+  const handleDeleteAccount = () => {
+    toast({
+      title: "Account deletion initiated",
+      description: "We've sent a confirmation email to proceed with account deletion.",
+      variant: "destructive",
+    });
+  };
+  
+  const handleSavePreferences = () => {
+    toast({
+      title: "Preferences saved",
+      description: "Your notification preferences have been updated.",
+    });
+  };
+  
+  const handleSaveAppearance = () => {
+    toast({
+      title: "Appearance settings saved",
+      description: "Your appearance settings have been updated.",
+    });
+  };
+
   return (
     <AppLayout>
       <div className="mb-6">
@@ -16,12 +69,13 @@ const Settings = () => {
         <p className="text-muted-foreground">Manage your application preferences</p>
       </div>
       
-      <Tabs defaultValue="account" className="mb-6">
+      <Tabs value={tab} onValueChange={handleTabChange} className="mb-6">
         <TabsList className="mb-6">
           <TabsTrigger value="account">Account</TabsTrigger>
           <TabsTrigger value="notifications">Notifications</TabsTrigger>
           <TabsTrigger value="appearance">Appearance</TabsTrigger>
           <TabsTrigger value="preferences">Preferences</TabsTrigger>
+          <TabsTrigger value="help">Help</TabsTrigger>
         </TabsList>
         
         <TabsContent value="account">
@@ -54,7 +108,7 @@ const Settings = () => {
                 </div>
               </CardContent>
               <CardFooter>
-                <Button>Save Changes</Button>
+                <Button onClick={handleSaveChanges}>Save Changes</Button>
               </CardFooter>
             </Card>
             
@@ -80,7 +134,7 @@ const Settings = () => {
                 </div>
               </CardContent>
               <CardFooter>
-                <Button>Update Password</Button>
+                <Button onClick={handleUpdatePassword}>Update Password</Button>
               </CardFooter>
             </Card>
             
@@ -95,7 +149,7 @@ const Settings = () => {
                     <h4 className="text-sm font-medium">Delete Account</h4>
                     <p className="text-sm text-muted-foreground">Permanently delete your account and all data</p>
                   </div>
-                  <Button variant="destructive">Delete Account</Button>
+                  <Button variant="destructive" onClick={handleDeleteAccount}>Delete Account</Button>
                 </div>
               </CardContent>
             </Card>
@@ -158,7 +212,7 @@ const Settings = () => {
               </div>
             </CardContent>
             <CardFooter>
-              <Button>Save Preferences</Button>
+              <Button onClick={handleSavePreferences}>Save Preferences</Button>
             </CardFooter>
           </Card>
         </TabsContent>
@@ -173,23 +227,32 @@ const Settings = () => {
               <div className="space-y-2">
                 <Label>Theme</Label>
                 <div className="grid grid-cols-3 gap-4">
-                  <div className="border rounded-md p-4 cursor-pointer bg-white flex flex-col items-center justify-center">
-                    <div className="w-8 h-8 rounded-full bg-fitness-primary mb-2"></div>
+                  <div 
+                    className={`border rounded-md p-4 cursor-pointer bg-white flex flex-col items-center justify-center ${theme === 'light' ? 'ring-2 ring-primary' : ''}`}
+                    onClick={() => setTheme('light')}
+                  >
+                    <div className="w-8 h-8 rounded-full bg-primary mb-2"></div>
                     <span className="text-sm font-medium">Light</span>
                   </div>
-                  <div className="border rounded-md p-4 cursor-pointer bg-gray-900 flex flex-col items-center justify-center">
-                    <div className="w-8 h-8 rounded-full bg-fitness-primary mb-2"></div>
+                  <div 
+                    className={`border rounded-md p-4 cursor-pointer bg-gray-900 flex flex-col items-center justify-center ${theme === 'dark' ? 'ring-2 ring-primary' : ''}`}
+                    onClick={() => setTheme('dark')}
+                  >
+                    <div className="w-8 h-8 rounded-full bg-primary mb-2"></div>
                     <span className="text-sm font-medium text-white">Dark</span>
                   </div>
-                  <div className="border rounded-md p-4 cursor-pointer bg-gradient-to-r from-white to-gray-900 flex flex-col items-center justify-center">
-                    <div className="w-8 h-8 rounded-full bg-fitness-primary mb-2"></div>
+                  <div 
+                    className={`border rounded-md p-4 cursor-pointer bg-gradient-to-r from-white to-gray-900 flex flex-col items-center justify-center ${theme === 'system' ? 'ring-2 ring-primary' : ''}`}
+                    onClick={() => setTheme('system')}
+                  >
+                    <div className="w-8 h-8 rounded-full bg-primary mb-2"></div>
                     <span className="text-sm font-medium">System</span>
                   </div>
                 </div>
               </div>
             </CardContent>
             <CardFooter>
-              <Button>Save Appearance</Button>
+              <Button onClick={handleSaveAppearance}>Save Appearance</Button>
             </CardFooter>
           </Card>
         </TabsContent>
@@ -208,11 +271,11 @@ const Settings = () => {
                   <Label>Weight</Label>
                   <div className="flex space-x-4">
                     <div className="flex items-center space-x-2">
-                      <input type="radio" id="kg" name="weight-unit" className="text-fitness-primary" defaultChecked />
+                      <input type="radio" id="kg" name="weight-unit" className="text-primary" defaultChecked />
                       <Label htmlFor="kg">Kilograms (kg)</Label>
                     </div>
                     <div className="flex items-center space-x-2">
-                      <input type="radio" id="lb" name="weight-unit" className="text-fitness-primary" />
+                      <input type="radio" id="lb" name="weight-unit" className="text-primary" />
                       <Label htmlFor="lb">Pounds (lb)</Label>
                     </div>
                   </div>
@@ -222,11 +285,11 @@ const Settings = () => {
                   <Label>Distance</Label>
                   <div className="flex space-x-4">
                     <div className="flex items-center space-x-2">
-                      <input type="radio" id="km" name="distance-unit" className="text-fitness-primary" defaultChecked />
+                      <input type="radio" id="km" name="distance-unit" className="text-primary" defaultChecked />
                       <Label htmlFor="km">Kilometers (km)</Label>
                     </div>
                     <div className="flex items-center space-x-2">
-                      <input type="radio" id="mi" name="distance-unit" className="text-fitness-primary" />
+                      <input type="radio" id="mi" name="distance-unit" className="text-primary" />
                       <Label htmlFor="mi">Miles (mi)</Label>
                     </div>
                   </div>
@@ -234,8 +297,64 @@ const Settings = () => {
               </div>
             </CardContent>
             <CardFooter>
-              <Button>Save Preferences</Button>
+              <Button onClick={handleSavePreferences}>Save Preferences</Button>
             </CardFooter>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="help">
+          <Card>
+            <CardHeader>
+              <CardTitle>Help & Support</CardTitle>
+              <CardDescription>Get assistance with using the application</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div className="space-y-4">
+                <h3 className="text-sm font-medium">Frequently Asked Questions</h3>
+                <div className="space-y-4">
+                  <div>
+                    <h4 className="font-medium">How do I track a workout?</h4>
+                    <p className="text-sm text-muted-foreground mt-1">
+                      Go to the Workouts tab, click "New Workout" and follow the instructions to log your exercise.
+                    </p>
+                  </div>
+                  <div>
+                    <h4 className="font-medium">How do I log my meals?</h4>
+                    <p className="text-sm text-muted-foreground mt-1">
+                      Navigate to the Nutrition tab, click "Add Meal" and enter your food items and portions.
+                    </p>
+                  </div>
+                  <div>
+                    <h4 className="font-medium">How do I set fitness goals?</h4>
+                    <p className="text-sm text-muted-foreground mt-1">
+                      Go to your Profile, click on the Goals tab and select "Add New Goal" to create a custom target.
+                    </p>
+                  </div>
+                </div>
+              </div>
+              
+              <div className="space-y-4">
+                <h3 className="text-sm font-medium">Contact Support</h3>
+                <div className="space-y-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="support-subject">Subject</Label>
+                    <Input id="support-subject" placeholder="Brief description of your issue" />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="support-message">Message</Label>
+                    <textarea 
+                      id="support-message" 
+                      rows={4} 
+                      className="w-full border border-input bg-background px-3 py-2 rounded-md" 
+                      placeholder="Describe your issue in detail"
+                    ></textarea>
+                  </div>
+                </div>
+                <Button onClick={() => toast({ title: "Message sent", description: "We'll respond to your inquiry within 24 hours." })}>
+                  Submit Request
+                </Button>
+              </div>
+            </CardContent>
           </Card>
         </TabsContent>
       </Tabs>

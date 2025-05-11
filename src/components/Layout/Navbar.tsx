@@ -9,7 +9,8 @@ import {
   List, 
   PieChart, 
   Settings,
-  LogOut
+  LogOut,
+  Menu
 } from 'lucide-react';
 import {
   DropdownMenu,
@@ -20,6 +21,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { cn } from '@/lib/utils';
+import ThemeToggle from './ThemeToggle';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -27,53 +29,55 @@ const Navbar = () => {
   return (
     <>
       {/* Mobile Nav */}
-      <div className="fixed bottom-0 left-0 z-50 w-full h-16 bg-white border-t border-gray-200 md:hidden">
+      <div className="fixed bottom-0 left-0 z-50 w-full h-16 bg-background border-t border-border md:hidden">
         <div className="grid h-full max-w-lg grid-cols-5 mx-auto">
-          <Link to="/dashboard" className="inline-flex flex-col items-center justify-center px-5 hover:bg-gray-50">
-            <Activity className="w-5 h-5 text-fitness-primary" />
-            <span className="text-xs text-gray-500">Home</span>
+          <Link to="/dashboard" className="inline-flex flex-col items-center justify-center px-5 hover:bg-muted">
+            <Activity className="w-5 h-5 text-primary" />
+            <span className="text-xs text-foreground">Home</span>
           </Link>
           
-          <Link to="/workouts" className="inline-flex flex-col items-center justify-center px-5 hover:bg-gray-50">
-            <List className="w-5 h-5 text-gray-500" />
-            <span className="text-xs text-gray-500">Workouts</span>
+          <Link to="/workouts" className="inline-flex flex-col items-center justify-center px-5 hover:bg-muted">
+            <List className="w-5 h-5 text-muted-foreground" />
+            <span className="text-xs text-foreground">Workouts</span>
           </Link>
           
-          <Link to="/nutrition" className="inline-flex flex-col items-center justify-center px-5 hover:bg-gray-50">
-            <PieChart className="w-5 h-5 text-gray-500" />
-            <span className="text-xs text-gray-500">Nutrition</span>
+          <Link to="/nutrition" className="inline-flex flex-col items-center justify-center px-5 hover:bg-muted">
+            <PieChart className="w-5 h-5 text-muted-foreground" />
+            <span className="text-xs text-foreground">Nutrition</span>
           </Link>
           
-          <Link to="/progress" className="inline-flex flex-col items-center justify-center px-5 hover:bg-gray-50">
-            <Calendar className="w-5 h-5 text-gray-500" />
-            <span className="text-xs text-gray-500">Progress</span>
+          <Link to="/progress" className="inline-flex flex-col items-center justify-center px-5 hover:bg-muted">
+            <Calendar className="w-5 h-5 text-muted-foreground" />
+            <span className="text-xs text-foreground">Progress</span>
           </Link>
           
-          <Link to="/profile" className="inline-flex flex-col items-center justify-center px-5 hover:bg-gray-50">
-            <User className="w-5 h-5 text-gray-500" />
-            <span className="text-xs text-gray-500">Profile</span>
+          <Link to="/profile" className="inline-flex flex-col items-center justify-center px-5 hover:bg-muted">
+            <User className="w-5 h-5 text-muted-foreground" />
+            <span className="text-xs text-foreground">Profile</span>
           </Link>
         </div>
       </div>
 
       {/* Desktop Nav */}
-      <nav className="hidden md:flex fixed top-0 left-0 right-0 z-50 bg-white border-b border-gray-200">
+      <nav className="hidden md:flex fixed top-0 left-0 right-0 z-50 bg-background border-b border-border">
         <div className="container flex items-center justify-between h-16">
           <div className="flex items-center gap-2">
             <Link to="/dashboard" className="flex items-center gap-2">
-              <Activity className="w-8 h-8 text-fitness-primary" />
-              <span className="text-xl font-bold">FitTracker</span>
+              <Activity className="w-8 h-8 text-primary" />
+              <span className="text-xl font-bold text-foreground">FitTracker</span>
             </Link>
           </div>
 
           <div className="hidden md:flex items-center space-x-1">
-            <Link to="/dashboard" className="px-3 py-2 rounded-md hover:bg-gray-100 text-fitness-text">Dashboard</Link>
-            <Link to="/workouts" className="px-3 py-2 rounded-md hover:bg-gray-100 text-fitness-text">Workouts</Link>
-            <Link to="/nutrition" className="px-3 py-2 rounded-md hover:bg-gray-100 text-fitness-text">Nutrition</Link>
-            <Link to="/progress" className="px-3 py-2 rounded-md hover:bg-gray-100 text-fitness-text">Progress</Link>
+            <Link to="/dashboard" className="px-3 py-2 rounded-md hover:bg-muted text-foreground">Dashboard</Link>
+            <Link to="/workouts" className="px-3 py-2 rounded-md hover:bg-muted text-foreground">Workouts</Link>
+            <Link to="/nutrition" className="px-3 py-2 rounded-md hover:bg-muted text-foreground">Nutrition</Link>
+            <Link to="/progress" className="px-3 py-2 rounded-md hover:bg-muted text-foreground">Progress</Link>
           </div>
 
           <div className="flex items-center gap-2">
+            <ThemeToggle />
+            
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="icon" className="rounded-full">
@@ -84,11 +88,17 @@ const Navbar = () => {
                 <DropdownMenuLabel>Settings</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem asChild>
-                  <Link to="/settings">App Settings</Link>
+                  <Link to="/settings?tab=account">App Settings</Link>
                 </DropdownMenuItem>
-                <DropdownMenuItem>Notifications</DropdownMenuItem>
-                <DropdownMenuItem>Appearance</DropdownMenuItem>
-                <DropdownMenuItem>Help & Support</DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to="/settings?tab=notifications">Notifications</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to="/settings?tab=appearance">Appearance</Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to="/settings?tab=help">Help & Support</Link>
+                </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
             
@@ -104,7 +114,9 @@ const Navbar = () => {
                 <DropdownMenuItem asChild>
                   <Link to="/profile">Profile</Link>
                 </DropdownMenuItem>
-                <DropdownMenuItem>Account Settings</DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link to="/settings?tab=account">Account Settings</Link>
+                </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem asChild>
                   <Link to="/" className="text-red-500 flex items-center gap-2">

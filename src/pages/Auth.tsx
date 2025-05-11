@@ -4,29 +4,26 @@ import AuthForm from '@/components/Auth/AuthForm';
 import { Activity, PieChart, Calendar } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
-import { Menu, User, Settings, LogOut } from 'lucide-react';
+import { Menu } from 'lucide-react';
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { NavigationMenu, NavigationMenuList, navigationMenuTriggerStyle } from '@/components/ui/navigation-menu';
+  NavigationMenu, 
+  NavigationMenuList, 
+  navigationMenuTriggerStyle
+} from '@/components/ui/navigation-menu';
+import ThemeToggle from '@/components/Layout/ThemeToggle';
 
 const Auth = () => {
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
 
   return (
-    <div className="min-h-screen flex flex-col">
+    <div className="min-h-screen flex flex-col bg-background text-foreground">
       {/* Fixed Navbar */}
-      <nav className="fixed top-0 left-0 right-0 bg-white/95 shadow-sm z-50 backdrop-blur-sm">
+      <nav className="fixed top-0 left-0 right-0 bg-background/95 shadow-sm z-50 backdrop-blur-sm">
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <Link to="/">
-                <Activity className="h-8 w-8 text-fitness-primary" />
+              <Link to="/" className="flex items-center gap-2">
+                <Activity className="h-8 w-8 text-primary" />
                 <span className="text-xl font-bold">FitTracker</span>
               </Link>
             </div>
@@ -47,7 +44,8 @@ const Auth = () => {
                 </NavigationMenuList>
               </NavigationMenu>
               
-              <div className="ml-4">
+              <div className="ml-4 flex items-center gap-2">
+                <ThemeToggle />
                 <Button asChild variant="outline">
                   <Link to="/auth">Log In</Link>
                 </Button>
@@ -55,7 +53,8 @@ const Auth = () => {
             </div>
             
             {/* Mobile menu button */}
-            <div className="md:hidden">
+            <div className="md:hidden flex items-center gap-2">
+              <ThemeToggle />
               <Button variant="ghost" size="icon" onClick={() => setIsMenuOpen(!isMenuOpen)}>
                 <Menu />
               </Button>
@@ -66,16 +65,16 @@ const Auth = () => {
           {isMenuOpen && (
             <div className="md:hidden py-4 pt-2">
               <div className="flex flex-col space-y-2">
-                <Link to="/" className="px-3 py-2 rounded-md hover:bg-gray-100">
+                <Link to="/" className="px-3 py-2 rounded-md hover:bg-muted">
                   Home
                 </Link>
-                <a href="/#features" className="px-3 py-2 rounded-md hover:bg-gray-100">
+                <a href="/#features" className="px-3 py-2 rounded-md hover:bg-muted">
                   Features
                 </a>
-                <a href="/#testimonials" className="px-3 py-2 rounded-md hover:bg-gray-100">
+                <a href="/#testimonials" className="px-3 py-2 rounded-md hover:bg-muted">
                   Testimonials
                 </a>
-                <Link to="/auth" className="px-3 py-2 rounded-md hover:bg-gray-100 text-fitness-primary">
+                <Link to="/auth" className="px-3 py-2 rounded-md hover:bg-muted text-primary">
                   Log In
                 </Link>
               </div>
@@ -87,7 +86,7 @@ const Auth = () => {
       {/* Auth Form Section with padding for navbar */}
       <div className="flex flex-col md:flex-row pt-20">
         {/* Hero Section */}
-        <div className="bg-fitness-primary flex-1 flex flex-col justify-center items-center p-6 md:p-12 text-white">
+        <div className="bg-primary flex-1 flex flex-col justify-center items-center p-6 md:p-12 text-white">
           <div className="max-w-md text-center md:text-left">
             <div className="flex justify-center md:justify-start mb-6">
               <Activity className="h-12 w-12" />
