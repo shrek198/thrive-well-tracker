@@ -28,6 +28,9 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     
     root.classList.remove('light', 'dark');
     root.classList.add(theme);
+
+    // Apply theme to body as well for complete coverage
+    document.body.className = theme;
   }, [theme]);
 
   return (

@@ -82,6 +82,9 @@
     --sidebar-accent-foreground: 240 4.8% 95.9%;
     --sidebar-border: 240 3.7% 15.9%;
     --sidebar-ring: 217.2 91.2% 59.8%;
+
+    /* Ensure fitness-specific colors are also themed */
+    --fitness-background: 222.2 84% 4.9%;
   }
 }
 
@@ -94,6 +97,16 @@
     @apply bg-background text-foreground;
     font-feature-settings: "rlig" 1, "calt" 1;
   }
+
+  /* Ensure all white backgrounds get themed properly */
+  .dark .bg-white {
+    @apply bg-background;
+  }
+  
+  /* Fix for white backgrounds in cards when in dark mode */
+  .dark .fitness-stat {
+    @apply bg-card;
+  }
 }
 
 @layer components {
@@ -102,7 +115,8 @@
   }
   
   .fitness-stat {
-    @apply flex flex-col items-center justify-center p-4 bg-white rounded-lg border text-center shadow-sm;
+    @apply flex flex-col items-center justify-center p-4 rounded-lg border text-center shadow-sm;
+    background-color: hsl(var(--card));
   }
   
   .fitness-btn-primary {
