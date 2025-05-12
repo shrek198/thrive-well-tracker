@@ -59,6 +59,7 @@ export interface Progress {
     biceps?: number;
     thighs?: number;
   };
+  photos?: string[];
 }
 
 export interface DailyStats {
