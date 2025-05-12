@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import AppLayout from '@/components/Layout/AppLayout';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -92,7 +91,9 @@ const Progress = () => {
       <Button 
         onClick={() => {
           const button = document.querySelector('button[class*="gap-2"]:has(svg[data-lucide="plus"])');
-          if (button) (button as HTMLButtonElement).click();
+          if (button && button instanceof HTMLButtonElement) {
+            button.click();
+          }
         }}
       >
         {buttonText}
@@ -158,7 +159,9 @@ const Progress = () => {
                     <Button 
                       onClick={() => {
                         const button = document.querySelector('button[class*="gap-2"]:has(svg[data-lucide="plus"])');
-                        if (button) (button as HTMLButtonElement).click();
+                        if (button && button instanceof HTMLButtonElement) {
+                          button.click();
+                        }
                       }}
                     >
                       Record Weight
@@ -206,7 +209,9 @@ const Progress = () => {
                     <Button 
                       onClick={() => {
                         const button = document.querySelector('button[class*="gap-2"]:has(svg[data-lucide="plus"])');
-                        if (button) (button as HTMLButtonElement).click();
+                        if (button && button instanceof HTMLButtonElement) {
+                          button.click();
+                        }
                       }}
                     >
                       Record Body Fat
@@ -256,7 +261,9 @@ const Progress = () => {
                       className="mt-4" 
                       onClick={() => {
                         const button = document.querySelector('button[class*="gap-2"]:has(svg[data-lucide="plus"])');
-                        if (button) (button as HTMLButtonElement).click();
+                        if (button && button instanceof HTMLButtonElement) {
+                          button.click();
+                        }
                       }}
                     >
                       Record Your First Measurement
@@ -356,7 +363,10 @@ const Progress = () => {
             <CardContent>
               {measurementsData.length > 0 ? (
                 <div className="space-y-6">
-                  <ProgressChart data={measurementsData} height={300} />
+                  <ProgressChart 
+                    data={measurementsData} 
+                    height={300}
+                  />
                   <div className="border rounded-md overflow-hidden">
                     <MeasurementTable 
                       data={measurementsData} 
@@ -386,7 +396,9 @@ const Progress = () => {
                   <Button 
                     onClick={() => {
                       const button = document.querySelector('button[class*="gap-2"]:has(svg[data-lucide="plus"])');
-                      if (button) (button as HTMLButtonElement).click();
+                      if (button && button instanceof HTMLButtonElement) {
+                        button.click();
+                      }
                     }}
                   >
                     Upload Your First Photo
@@ -476,7 +488,10 @@ const Progress = () => {
             <div className="space-y-6">
               {measurementsData.length > 0 ? (
                 <>
-                  <ProgressChart data={measurementsData} height={300} />
+                  <ProgressChart 
+                    data={measurementsData} 
+                    height={300}
+                  />
                   <div className="border rounded-md overflow-hidden">
                     <MeasurementTable 
                       data={measurementsData} 

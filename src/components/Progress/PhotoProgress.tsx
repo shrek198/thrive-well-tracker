@@ -4,8 +4,14 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Upload, Calendar, ArrowLeftRight } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
+import { Progress } from '@/types';
+import { format } from 'date-fns';
 
-const PhotoProgress = () => {
+interface PhotoProgressProps {
+  photos?: Progress[];
+}
+
+const PhotoProgress: React.FC<PhotoProgressProps> = ({ photos = [] }) => {
   const { toast } = useToast();
   
   const handleUploadPhoto = () => {
@@ -21,6 +27,10 @@ const PhotoProgress = () => {
       description: "Photo comparison functionality will be implemented soon",
     });
   };
+
+  const lastUploadDate = photos.length > 0 
+    ? format(new Date(photos[0].date), 'MMM d, yyyy')
+    : 'Never';
   
   return (
     <Card>
@@ -40,12 +50,20 @@ const PhotoProgress = () => {
                 className="aspect-square bg-muted/50 rounded-md flex flex-col items-center justify-center"
                 onClick={handleUploadPhoto}
               >
-                <button className="flex flex-col items-center justify-center w-full h-full">
-                  <Upload className="h-8 w-8 text-muted-foreground mb-2" />
-                  <p className="text-sm font-medium">
-                    {index === 1 ? "Front View" : index === 2 ? "Side View" : "Back View"}
-                  </p>
-                </button>
+                {photos.length > 0 && photos[0].photos && photos[0].photos[index - 1] ? (
+                  <img 
+                    src={photos[0].photos[index - 1]} 
+                    alt={`Progress photo ${index}`}
+                    className="object-cover w-full h-full rounded-md"
+                  />
+                ) : (
+                  <button className="flex flex-col items-center justify-center w-full h-full">
+                    <Upload className="h-8 w-8 text-muted-foreground mb-2" />
+                    <p className="text-sm font-medium">
+                      {index === 1 ? "Front View" : index === 2 ? "Side View" : "Back View"}
+                    </p>
+                  </button>
+                )}
               </div>
             ))}
           </div>
@@ -71,7 +89,7 @@ const PhotoProgress = () => {
           <div className="text-xs text-muted-foreground pt-2">
             <span className="flex items-center">
               <Calendar className="h-3 w-3 mr-1 inline" />
-              Last upload: Never
+              Last upload: {lastUploadDate}
             </span>
           </div>
         </div>

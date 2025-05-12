@@ -5,19 +5,13 @@ import { format } from 'date-fns';
 import { Progress } from '@/types';
 
 interface MeasurementTableProps {
-  measurements: Progress[];
-  type: 'weight' | 'bodyFat' | 'measurements';
+  data: Progress[];
+  columns: string[];
 }
 
-const MeasurementTable: React.FC<MeasurementTableProps> = ({ measurements, type }) => {
+const MeasurementTable: React.FC<MeasurementTableProps> = ({ data, columns }) => {
   // Sort measurements by date (newest first)
-  const sortedMeasurements = [...measurements]
-    .filter(m => {
-      if (type === 'weight') return m.weight !== undefined;
-      if (type === 'bodyFat') return m.bodyFat !== undefined;
-      if (type === 'measurements') return m.measurements !== undefined;
-      return false;
-    })
+  const sortedMeasurements = [...data]
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime());
 
   if (sortedMeasurements.length === 0) {
@@ -33,19 +27,15 @@ const MeasurementTable: React.FC<MeasurementTableProps> = ({ measurements, type 
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>Date</TableHead>
-            {type === 'weight' && <TableHead>Weight</TableHead>}
-            {type === 'bodyFat' && <TableHead>Body Fat %</TableHead>}
-            {type === 'measurements' && (
-              <>
-                <TableHead>Chest</TableHead>
-                <TableHead>Waist</TableHead>
-                <TableHead>Hips</TableHead>
-                <TableHead>Biceps</TableHead>
-                <TableHead>Thighs</TableHead>
-              </>
-            )}
-            <TableHead>Change</TableHead>
+            {columns.includes('date') && <TableHead>Date</TableHead>}
+            {columns.includes('weight') && <TableHead>Weight (kg)</TableHead>}
+            {columns.includes('bodyFat') && <TableHead>Body Fat (%)</TableHead>}
+            {columns.includes('chest') && <TableHead>Chest (cm)</TableHead>}
+            {columns.includes('waist') && <TableHead>Waist (cm)</TableHead>}
+            {columns.includes('hips') && <TableHead>Hips (cm)</TableHead>}
+            {columns.includes('biceps') && <TableHead>Biceps (cm)</TableHead>}
+            {columns.includes('thighs') && <TableHead>Thighs (cm)</TableHead>}
+            {columns.length > 1 && <TableHead>Change</TableHead>}
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -56,11 +46,11 @@ const MeasurementTable: React.FC<MeasurementTableProps> = ({ measurements, type 
             let changeFormatted = '';
             let isPositive = false;
             
-            if (type === 'weight' && prevMeasurement?.weight && measurement.weight) {
+            if (columns.includes('weight') && prevMeasurement?.weight && measurement.weight) {
               change = measurement.weight - prevMeasurement.weight;
               isPositive = change > 0;
-              changeFormatted = `${change > 0 ? '+' : ''}${change.toFixed(1)} lbs`;
-            } else if (type === 'bodyFat' && prevMeasurement?.bodyFat && measurement.bodyFat) {
+              changeFormatted = `${change > 0 ? '+' : ''}${change.toFixed(1)} kg`;
+            } else if (columns.includes('bodyFat') && prevMeasurement?.bodyFat && measurement.bodyFat) {
               change = measurement.bodyFat - prevMeasurement.bodyFat;
               isPositive = change > 0;
               changeFormatted = `${change > 0 ? '+' : ''}${change.toFixed(1)}%`;
@@ -68,34 +58,48 @@ const MeasurementTable: React.FC<MeasurementTableProps> = ({ measurements, type 
             
             return (
               <TableRow key={measurement.date.toString()}>
-                <TableCell>{format(new Date(measurement.date), 'MMM d, yyyy')}</TableCell>
-                
-                {type === 'weight' && (
-                  <TableCell>{measurement.weight} lbs</TableCell>
+                {columns.includes('date') && (
+                  <TableCell>{format(new Date(measurement.date), 'MMM d, yyyy')}</TableCell>
                 )}
                 
-                {type === 'bodyFat' && (
+                {columns.includes('weight') && (
+                  <TableCell>{measurement.weight} kg</TableCell>
+                )}
+                
+                {columns.includes('bodyFat') && (
                   <TableCell>{measurement.bodyFat}%</TableCell>
                 )}
                 
-                {type === 'measurements' && (
-                  <>
-                    <TableCell>{measurement.measurements?.chest || '-'} in</TableCell>
-                    <TableCell>{measurement.measurements?.waist || '-'} in</TableCell>
-                    <TableCell>{measurement.measurements?.hips || '-'} in</TableCell>
-                    <TableCell>{measurement.measurements?.biceps || '-'} in</TableCell>
-                    <TableCell>{measurement.measurements?.thighs || '-'} in</TableCell>
-                  </>
+                {columns.includes('chest') && (
+                  <TableCell>{measurement.measurements?.chest || '-'} cm</TableCell>
                 )}
                 
-                <TableCell className={
-                  change === undefined ? 'text-muted-foreground' :
-                  (type === 'weight' || type === 'bodyFat') ? 
-                    (isPositive ? 'text-red-500' : 'text-green-500') : 
-                    'text-blue-500'
-                }>
-                  {change === undefined ? '-' : changeFormatted}
-                </TableCell>
+                {columns.includes('waist') && (
+                  <TableCell>{measurement.measurements?.waist || '-'} cm</TableCell>
+                )}
+                
+                {columns.includes('hips') && (
+                  <TableCell>{measurement.measurements?.hips || '-'} cm</TableCell>
+                )}
+                
+                {columns.includes('biceps') && (
+                  <TableCell>{measurement.measurements?.biceps || '-'} cm</TableCell>
+                )}
+                
+                {columns.includes('thighs') && (
+                  <TableCell>{measurement.measurements?.thighs || '-'} cm</TableCell>
+                )}
+                
+                {columns.length > 1 && (
+                  <TableCell className={
+                    change === undefined ? 'text-muted-foreground' :
+                    (columns.includes('weight') || columns.includes('bodyFat')) ? 
+                      (isPositive ? 'text-red-500' : 'text-green-500') : 
+                      'text-blue-500'
+                  }>
+                    {change === undefined ? '-' : changeFormatted}
+                  </TableCell>
+                )}
               </TableRow>
             );
           })}
