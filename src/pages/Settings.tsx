@@ -1,4 +1,3 @@
-
 import React, { useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import AppLayout from '@/components/Layout/AppLayout';
@@ -226,7 +225,7 @@ const Settings = () => {
             <CardContent className="space-y-4">
               <div className="space-y-2">
                 <Label>Theme</Label>
-                <div className="grid grid-cols-3 gap-4">
+                <div className="grid grid-cols-2 gap-4">
                   <div 
                     className={`border rounded-md p-4 cursor-pointer bg-white flex flex-col items-center justify-center ${theme === 'light' ? 'ring-2 ring-primary' : ''}`}
                     onClick={() => setTheme('light')}
@@ -240,13 +239,6 @@ const Settings = () => {
                   >
                     <div className="w-8 h-8 rounded-full bg-primary mb-2"></div>
                     <span className="text-sm font-medium text-white">Dark</span>
-                  </div>
-                  <div 
-                    className={`border rounded-md p-4 cursor-pointer bg-gradient-to-r from-white to-gray-900 flex flex-col items-center justify-center ${theme === 'system' ? 'ring-2 ring-primary' : ''}`}
-                    onClick={() => setTheme('system')}
-                  >
-                    <div className="w-8 h-8 rounded-full bg-primary mb-2"></div>
-                    <span className="text-sm font-medium">System</span>
                   </div>
                 </div>
               </div>
