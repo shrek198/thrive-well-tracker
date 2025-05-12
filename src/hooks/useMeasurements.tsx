@@ -35,7 +35,7 @@ export const useMeasurements = () => {
   }, []);
 
   // Add a new measurement
-  const addMeasurement = (measurement: Progress) => {
+  const addMeasurement = (measurement: Progress): void => {
     const newMeasurements = [...measurements, measurement];
     setMeasurements(newMeasurements);
     
@@ -48,16 +48,35 @@ export const useMeasurements = () => {
   };
 
   // Get measurements filtered by type (weight, bodyFat, etc.)
-  const getMeasurementsByType = (type: keyof Progress) => {
+  const getMeasurementsByType = (type: keyof Progress): Progress[] => {
     return measurements
       .filter(m => m[type] !== undefined)
       .sort((a, b) => a.date.getTime() - b.date.getTime());
+  };
+
+  // Get all measurements
+  const getAllMeasurements = (): Progress[] => {
+    return [...measurements].sort((a, b) => b.date.getTime() - a.date.getTime());
+  };
+
+  // Delete a measurement
+  const deleteMeasurement = (id: string): void => {
+    // Our Progress type doesn't have an id, but we can add one for deletion logic
+    // For now, we'll use the date as a unique identifier
+    const updatedMeasurements = measurements.filter(
+      m => m.date.getTime().toString() !== id
+    );
+    
+    setMeasurements(updatedMeasurements);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(updatedMeasurements));
   };
 
   return {
     measurements,
     loading,
     addMeasurement,
-    getMeasurementsByType
+    getMeasurementsByType,
+    getAllMeasurements,
+    deleteMeasurement
   };
 };

@@ -1,293 +1,288 @@
+
 import React, { useState } from 'react';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useToast } from "@/hooks/use-toast";
-import { Calendar, Plus, Upload } from 'lucide-react';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Plus } from 'lucide-react';
+import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
+import { Progress } from '@/types';
+import { useMeasurements } from '@/hooks/useMeasurements';
+import { useToast } from '@/hooks/use-toast';
 
-type MeasurementType = 'weight' | 'bodyFat' | 'measurements' | 'photos';
-
-interface MeasurementData {
-  date: Date;
-  weight?: number;
-  bodyFat?: number;
-  measurements?: {
-    chest?: number;
-    waist?: number;
-    hips?: number;
-    biceps?: number;
-    thighs?: number;
-  };
-  photos?: string[];
-}
-
-const RecordMeasurementDialog = ({ onMeasurementAdded }: { onMeasurementAdded: (data: MeasurementData) => void }) => {
+const RecordMeasurementDialog = () => {
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState<string>("weight");
+  const { addMeasurement } = useMeasurements();
   const { toast } = useToast();
-  const [selectedTab, setSelectedTab] = useState<MeasurementType>('weight');
-  const [measurementData, setMeasurementData] = useState<MeasurementData>({
-    date: new Date(),
-    weight: undefined,
-    bodyFat: undefined,
-    measurements: {
-      chest: undefined,
-      waist: undefined,
-      hips: undefined,
-      biceps: undefined,
-      thighs: undefined
-    },
-    photos: []
+
+  // Form states for different types of measurements
+  const [weightData, setWeightData] = useState({
+    weight: '',
   });
-  
-  const handleInputChange = (type: MeasurementType, field: string, value: string) => {
-    const numValue = value ? parseFloat(value) : undefined;
-    
-    if (type === 'measurements') {
-      setMeasurementData({
-        ...measurementData,
-        measurements: {
-          ...measurementData.measurements,
-          [field]: numValue
-        }
-      });
-    } else {
-      setMeasurementData({
-        ...measurementData,
-        [field]: numValue
-      });
-    }
-  };
-  
+
+  const [bodyFatData, setBodyFatData] = useState({
+    bodyFat: '',
+  });
+
+  const [measurementsData, setMeasurementsData] = useState({
+    chest: '',
+    waist: '',
+    hips: '',
+    biceps: '',
+    thighs: '',
+  });
+
+  const [photoData, setPhotoData] = useState({
+    photoUrl: '',
+    notes: '',
+  });
+
   const handleSubmit = () => {
-    // Validate data based on selected tab
-    if (selectedTab === 'weight' && !measurementData.weight) {
-      toast({
-        title: "Weight required",
-        description: "Please enter your current weight",
-        variant: "destructive"
-      });
-      return;
-    }
-    
-    if (selectedTab === 'bodyFat' && !measurementData.bodyFat) {
-      toast({
-        title: "Body fat percentage required",
-        description: "Please enter your current body fat percentage",
-        variant: "destructive"
-      });
-      return;
-    }
-    
-    if (selectedTab === 'measurements' && 
-        !measurementData.measurements?.chest && 
-        !measurementData.measurements?.waist && 
-        !measurementData.measurements?.hips && 
-        !measurementData.measurements?.biceps && 
-        !measurementData.measurements?.thighs) {
-      toast({
-        title: "Measurements required",
-        description: "Please enter at least one body measurement",
-        variant: "destructive"
-      });
-      return;
+    const now = new Date();
+    let newMeasurement: Progress = {
+      date: now,
+    };
+
+    let successMessage = '';
+
+    // Add the appropriate measurement data based on activeTab
+    switch (activeTab) {
+      case 'weight':
+        if (!weightData.weight) {
+          toast({
+            title: "Missing Information",
+            description: "Please enter a weight value",
+            variant: "destructive"
+          });
+          return;
+        }
+        newMeasurement.weight = parseFloat(weightData.weight);
+        successMessage = `Weight of ${weightData.weight}kg recorded`;
+        setWeightData({ weight: '' });
+        break;
+
+      case 'bodyfat':
+        if (!bodyFatData.bodyFat) {
+          toast({
+            title: "Missing Information",
+            description: "Please enter a body fat percentage",
+            variant: "destructive"
+          });
+          return;
+        }
+        newMeasurement.bodyFat = parseFloat(bodyFatData.bodyFat);
+        successMessage = `Body fat of ${bodyFatData.bodyFat}% recorded`;
+        setBodyFatData({ bodyFat: '' });
+        break;
+
+      case 'measurements':
+        // Check if at least one measurement is provided
+        const hasMeasurement = Object.values(measurementsData).some(value => !!value);
+        if (!hasMeasurement) {
+          toast({
+            title: "Missing Information",
+            description: "Please enter at least one body measurement",
+            variant: "destructive"
+          });
+          return;
+        }
+        
+        // Convert string values to numbers where provided
+        newMeasurement.measurements = {
+          chest: measurementsData.chest ? parseFloat(measurementsData.chest) : undefined,
+          waist: measurementsData.waist ? parseFloat(measurementsData.waist) : undefined,
+          hips: measurementsData.hips ? parseFloat(measurementsData.hips) : undefined,
+          biceps: measurementsData.biceps ? parseFloat(measurementsData.biceps) : undefined,
+          thighs: measurementsData.thighs ? parseFloat(measurementsData.thighs) : undefined,
+        };
+        successMessage = 'Body measurements recorded';
+        setMeasurementsData({
+          chest: '',
+          waist: '',
+          hips: '',
+          biceps: '',
+          thighs: '',
+        });
+        break;
+
+      case 'photos':
+        if (!photoData.photoUrl) {
+          toast({
+            title: "Missing Information",
+            description: "Please provide a photo URL",
+            variant: "destructive"
+          });
+          return;
+        }
+        newMeasurement.photos = [photoData.photoUrl];
+        successMessage = 'Progress photo recorded';
+        setPhotoData({ photoUrl: '', notes: '' });
+        break;
     }
 
-    // Save the data and notify parent component
-    onMeasurementAdded(measurementData);
+    // Save the measurement
+    addMeasurement(newMeasurement);
     
-    // Close the dialog
+    // Close dialog and show success toast
+    setIsDialogOpen(false);
     toast({
-      title: "Measurement recorded",
-      description: "Your progress has been saved successfully",
+      title: "Measurement Recorded",
+      description: successMessage,
     });
-    
-    // Reset the form data
-    setMeasurementData({
-      date: new Date(),
-      weight: undefined,
-      bodyFat: undefined,
-      measurements: {
-        chest: undefined,
-        waist: undefined,
-        hips: undefined,
-        biceps: undefined,
-        thighs: undefined
-      },
-      photos: []
-    });
-    
-    // Close dialog by clicking the close button
-    document.querySelector<HTMLButtonElement>('[data-state="open"] [role="dialog"] button[aria-label="Close"]')?.click();
   };
-  
+
   return (
-    <Dialog>
+    <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
       <DialogTrigger asChild>
         <Button className="gap-2">
           <Plus size={16} /> Record Measurement
         </Button>
       </DialogTrigger>
-      <DialogContent className="sm:max-w-[500px]">
+      <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>Record New Measurement</DialogTitle>
-          <DialogDescription>Track your progress by recording your latest measurements</DialogDescription>
+          <DialogDescription>
+            Track your progress by recording new measurements
+          </DialogDescription>
         </DialogHeader>
         
-        <div className="py-4">
-          <div className="flex items-center gap-2 mb-4">
-            <Calendar className="h-4 w-4 text-muted-foreground" />
-            <span className="text-sm">
-              {new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}
-            </span>
-          </div>
+        <Tabs value={activeTab} onValueChange={setActiveTab}>
+          <TabsList className="grid grid-cols-4">
+            <TabsTrigger value="weight">Weight</TabsTrigger>
+            <TabsTrigger value="bodyfat">Body Fat</TabsTrigger>
+            <TabsTrigger value="measurements">Measurements</TabsTrigger>
+            <TabsTrigger value="photos">Photos</TabsTrigger>
+          </TabsList>
           
-          <Tabs defaultValue="weight" value={selectedTab} onValueChange={(value) => setSelectedTab(value as MeasurementType)}>
-            <TabsList className="grid grid-cols-4">
-              <TabsTrigger value="weight">Weight</TabsTrigger>
-              <TabsTrigger value="bodyFat">Body Fat</TabsTrigger>
-              <TabsTrigger value="measurements">Measurements</TabsTrigger>
-              <TabsTrigger value="photos">Photos</TabsTrigger>
-            </TabsList>
-            
-            <TabsContent value="weight" className="mt-4 space-y-4">
+          <TabsContent value="weight" className="space-y-4 py-4">
+            <div className="space-y-2">
+              <Label htmlFor="weight">Weight (kg)</Label>
+              <Input
+                id="weight"
+                type="number"
+                step="0.1"
+                placeholder="e.g. 70.5"
+                value={weightData.weight}
+                onChange={(e) => setWeightData({ weight: e.target.value })}
+              />
+            </div>
+            <div className="text-sm text-muted-foreground">
+              Record your current weight to track progress over time
+            </div>
+          </TabsContent>
+          
+          <TabsContent value="bodyfat" className="space-y-4 py-4">
+            <div className="space-y-2">
+              <Label htmlFor="bodyfat">Body Fat Percentage (%)</Label>
+              <Input
+                id="bodyfat"
+                type="number"
+                step="0.1"
+                placeholder="e.g. 15.5"
+                value={bodyFatData.bodyFat}
+                onChange={(e) => setBodyFatData({ bodyFat: e.target.value })}
+              />
+            </div>
+            <div className="text-sm text-muted-foreground">
+              Record your current body fat percentage using calipers, bioimpedance scale, or other measurement methods
+            </div>
+          </TabsContent>
+          
+          <TabsContent value="measurements" className="space-y-4 py-4">
+            <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="weight">Current Weight</Label>
-                <div className="flex gap-2">
-                  <Input 
-                    id="weight"
-                    type="number"
-                    placeholder="Enter weight"
-                    value={measurementData.weight || ''}
-                    onChange={(e) => handleInputChange('weight', 'weight', e.target.value)}
-                  />
-                  <select 
-                    className="p-2 border border-input rounded-md bg-background w-24"
-                    defaultValue="lbs"
-                  >
-                    <option value="lbs">lbs</option>
-                    <option value="kg">kg</option>
-                  </select>
-                </div>
+                <Label htmlFor="chest">Chest (cm)</Label>
+                <Input
+                  id="chest"
+                  type="number"
+                  step="0.1"
+                  placeholder="e.g. 100"
+                  value={measurementsData.chest}
+                  onChange={(e) => setMeasurementsData({ ...measurementsData, chest: e.target.value })}
+                />
               </div>
-            </TabsContent>
-            
-            <TabsContent value="bodyFat" className="mt-4 space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="bodyFat">Current Body Fat %</Label>
-                <div className="flex gap-2">
-                  <Input 
-                    id="bodyFat"
-                    type="number"
-                    placeholder="Enter body fat"
-                    min="1"
-                    max="50"
-                    step="0.1"
-                    value={measurementData.bodyFat || ''}
-                    onChange={(e) => handleInputChange('bodyFat', 'bodyFat', e.target.value)}
-                  />
-                  <span className="flex items-center">%</span>
-                </div>
+                <Label htmlFor="waist">Waist (cm)</Label>
+                <Input
+                  id="waist"
+                  type="number"
+                  step="0.1"
+                  placeholder="e.g. 80"
+                  value={measurementsData.waist}
+                  onChange={(e) => setMeasurementsData({ ...measurementsData, waist: e.target.value })}
+                />
               </div>
-            </TabsContent>
-            
-            <TabsContent value="measurements" className="mt-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="chest">Chest</Label>
-                  <div className="flex gap-2">
-                    <Input 
-                      id="chest"
-                      type="number"
-                      placeholder="Enter chest"
-                      value={measurementData.measurements?.chest || ''}
-                      onChange={(e) => handleInputChange('measurements', 'chest', e.target.value)}
-                    />
-                    <span className="flex items-center">in</span>
-                  </div>
-                </div>
-                
-                <div className="space-y-2">
-                  <Label htmlFor="waist">Waist</Label>
-                  <div className="flex gap-2">
-                    <Input 
-                      id="waist"
-                      type="number"
-                      placeholder="Enter waist"
-                      value={measurementData.measurements?.waist || ''}
-                      onChange={(e) => handleInputChange('measurements', 'waist', e.target.value)}
-                    />
-                    <span className="flex items-center">in</span>
-                  </div>
-                </div>
-                
-                <div className="space-y-2">
-                  <Label htmlFor="hips">Hips</Label>
-                  <div className="flex gap-2">
-                    <Input 
-                      id="hips"
-                      type="number"
-                      placeholder="Enter hips"
-                      value={measurementData.measurements?.hips || ''}
-                      onChange={(e) => handleInputChange('measurements', 'hips', e.target.value)}
-                    />
-                    <span className="flex items-center">in</span>
-                  </div>
-                </div>
-                
-                <div className="space-y-2">
-                  <Label htmlFor="biceps">Biceps</Label>
-                  <div className="flex gap-2">
-                    <Input 
-                      id="biceps"
-                      type="number"
-                      placeholder="Enter biceps"
-                      value={measurementData.measurements?.biceps || ''}
-                      onChange={(e) => handleInputChange('measurements', 'biceps', e.target.value)}
-                    />
-                    <span className="flex items-center">in</span>
-                  </div>
-                </div>
-                
-                <div className="space-y-2">
-                  <Label htmlFor="thighs">Thighs</Label>
-                  <div className="flex gap-2">
-                    <Input 
-                      id="thighs"
-                      type="number"
-                      placeholder="Enter thighs"
-                      value={measurementData.measurements?.thighs || ''}
-                      onChange={(e) => handleInputChange('measurements', 'thighs', e.target.value)}
-                    />
-                    <span className="flex items-center">in</span>
-                  </div>
-                </div>
+              <div className="space-y-2">
+                <Label htmlFor="hips">Hips (cm)</Label>
+                <Input
+                  id="hips"
+                  type="number"
+                  step="0.1"
+                  placeholder="e.g. 90"
+                  value={measurementsData.hips}
+                  onChange={(e) => setMeasurementsData({ ...measurementsData, hips: e.target.value })}
+                />
               </div>
-            </TabsContent>
-            
-            <TabsContent value="photos" className="mt-4">
-              <div className="space-y-4">
-                <div className="text-center p-8 border-2 border-dashed border-muted-foreground/20 rounded-lg">
-                  <div className="flex flex-col items-center">
-                    <Upload className="h-8 w-8 text-muted-foreground mb-2" />
-                    <p className="text-sm font-medium mb-1">Drag and drop photos</p>
-                    <p className="text-xs text-muted-foreground mb-3">or click to upload</p>
-                    <Button size="sm" variant="secondary">Upload Photos</Button>
-                  </div>
-                </div>
-                <p className="text-xs text-muted-foreground">
-                  Upload front, side, and back views for best progress tracking
-                </p>
+              <div className="space-y-2">
+                <Label htmlFor="biceps">Biceps (cm)</Label>
+                <Input
+                  id="biceps"
+                  type="number"
+                  step="0.1"
+                  placeholder="e.g. 35"
+                  value={measurementsData.biceps}
+                  onChange={(e) => setMeasurementsData({ ...measurementsData, biceps: e.target.value })}
+                />
               </div>
-            </TabsContent>
-          </Tabs>
-        </div>
+              <div className="space-y-2">
+                <Label htmlFor="thighs">Thighs (cm)</Label>
+                <Input
+                  id="thighs"
+                  type="number"
+                  step="0.1"
+                  placeholder="e.g. 55"
+                  value={measurementsData.thighs}
+                  onChange={(e) => setMeasurementsData({ ...measurementsData, thighs: e.target.value })}
+                />
+              </div>
+            </div>
+          </TabsContent>
+          
+          <TabsContent value="photos" className="space-y-4 py-4">
+            <div className="space-y-2">
+              <Label htmlFor="photo-url">Photo URL</Label>
+              <Input
+                id="photo-url"
+                placeholder="e.g. https://example.com/my-progress-photo.jpg"
+                value={photoData.photoUrl}
+                onChange={(e) => setPhotoData({ ...photoData, photoUrl: e.target.value })}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="photo-notes">Notes (Optional)</Label>
+              <Input
+                id="photo-notes"
+                placeholder="Add any notes about this photo"
+                value={photoData.notes}
+                onChange={(e) => setPhotoData({ ...photoData, notes: e.target.value })}
+              />
+            </div>
+            <div className="text-sm text-muted-foreground">
+              Upload your progress photos to visually track your transformation over time
+            </div>
+          </TabsContent>
+        </Tabs>
         
         <div className="flex justify-end gap-2">
-          <Button 
-            variant="outline"
-            onClick={() => document.querySelector<HTMLButtonElement>('[data-state="open"] [role="dialog"] button[aria-label="Close"]')?.click()}
-          >
+          <Button variant="outline" onClick={() => setIsDialogOpen(false)}>
             Cancel
           </Button>
           <Button onClick={handleSubmit}>Save Measurement</Button>

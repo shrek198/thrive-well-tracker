@@ -69,3 +69,23 @@ export interface DailyStats {
   waterIntake: number;
   stepsCount: number;
 }
+
+// Added interfaces for filters and storage management
+export interface WorkoutFilters {
+  types: string[];
+  durations: string[];
+  sortBy: string;
+}
+
+export interface MealPlan {
+  id: string;
+  name: string;
+  description?: string;
+  meals: PlanMeal[];
+}
+
+export interface PlanMeal {
+  name: string;
+  time: string;
+  items: FoodItem[];
+}
