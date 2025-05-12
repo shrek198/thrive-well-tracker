@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import AppLayout from '@/components/Layout/AppLayout';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -243,7 +242,10 @@ const Progress = () => {
                       variant="outline" 
                       size="sm"
                       className="mt-4" 
-                      onClick={() => document.querySelector('button[class*="gap-2"]:has(svg[data-lucide="plus"])')?.click()}
+                      onClick={() => {
+                        const button = document.querySelector('button[class*="gap-2"]:has(svg[data-lucide="plus"])');
+                        if (button) (button as HTMLButtonElement).click();
+                      }}
                     >
                       Record Your First Measurement
                     </Button>
@@ -293,7 +295,10 @@ const Progress = () => {
                     <LineChart className="h-16 w-16 mx-auto opacity-20 mb-2" />
                     <p className="mb-4">No weight data recorded yet</p>
                     <Button 
-                      onClick={() => document.querySelector('button[class*="gap-2"]:has(svg[data-lucide="plus"])')?.click()}
+                      onClick={() => {
+                        const button = document.querySelector('button[class*="gap-2"]:has(svg[data-lucide="plus"])');
+                        if (button) (button as HTMLButtonElement).click();
+                      }}
                     >
                       Record Weight
                     </Button>
@@ -328,7 +333,10 @@ const Progress = () => {
                     <LineChart className="h-16 w-16 mx-auto opacity-20 mb-2" />
                     <p className="mb-4">No body fat data recorded yet</p>
                     <Button 
-                      onClick={() => document.querySelector('button[class*="gap-2"]:has(svg[data-lucide="plus"])')?.click()}
+                      onClick={() => {
+                        const button = document.querySelector('button[class*="gap-2"]:has(svg[data-lucide="plus"])');
+                        if (button) (button as HTMLButtonElement).click();
+                      }}
                     >
                       Record Body Fat
                     </Button>
