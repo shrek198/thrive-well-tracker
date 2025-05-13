@@ -77,7 +77,8 @@ const UpdateGoalDialog: React.FC<UpdateGoalDialogProps> = ({
     toast({
       title: "Goal Completed",
       description: "Congratulations on achieving your goal!",
-      variant: "success"
+      // Changed from 'success' to 'default' as only 'default' or 'destructive' are valid variants
+      variant: "default"
     });
     
     onOpenChange(false);
