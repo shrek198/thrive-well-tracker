@@ -1,31 +1,32 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Upload, Calendar, ArrowLeftRight } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { Progress } from '@/types';
 import { format } from 'date-fns';
+import PhotoComparison from './PhotoComparison';
 
 interface PhotoProgressProps {
   photos?: Progress[];
+  onUploadPhoto: () => void;
 }
 
-const PhotoProgress: React.FC<PhotoProgressProps> = ({ photos = [] }) => {
+const PhotoProgress: React.FC<PhotoProgressProps> = ({ photos = [], onUploadPhoto }) => {
   const { toast } = useToast();
-  
-  const handleUploadPhoto = () => {
-    toast({
-      title: "Upload Photos",
-      description: "Photo upload functionality will be implemented soon",
-    });
-  };
+  const [isCompareOpen, setIsCompareOpen] = useState(false);
   
   const handleComparePhotos = () => {
-    toast({
-      title: "Compare Photos",
-      description: "Photo comparison functionality will be implemented soon",
-    });
+    if (photos.length < 2) {
+      toast({
+        title: "Not enough photos",
+        description: "You need at least 2 photos to make a comparison",
+        variant: "destructive"
+      });
+      return;
+    }
+    setIsCompareOpen(true);
   };
 
   const lastUploadDate = photos.length > 0 
@@ -44,35 +45,38 @@ const PhotoProgress: React.FC<PhotoProgressProps> = ({ photos = [] }) => {
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            {[1, 2, 3].map((index) => (
-              <div 
-                key={index} 
-                className="aspect-square bg-muted/50 rounded-md flex flex-col items-center justify-center"
-                onClick={handleUploadPhoto}
-              >
-                {photos.length > 0 && photos[0].photos && photos[0].photos[index - 1] ? (
-                  <img 
-                    src={photos[0].photos[index - 1]} 
-                    alt={`Progress photo ${index}`}
-                    className="object-cover w-full h-full rounded-md"
-                  />
-                ) : (
-                  <button className="flex flex-col items-center justify-center w-full h-full">
-                    <Upload className="h-8 w-8 text-muted-foreground mb-2" />
-                    <p className="text-sm font-medium">
-                      {index === 1 ? "Front View" : index === 2 ? "Side View" : "Back View"}
-                    </p>
-                  </button>
-                )}
-              </div>
-            ))}
+            {[0, 1, 2].map((index) => {
+              const hasPhoto = photos.length > index && photos[index].photos && photos[index].photos.length > 0;
+              return (
+                <div 
+                  key={index} 
+                  className="aspect-square bg-muted/50 rounded-md flex flex-col items-center justify-center overflow-hidden"
+                  onClick={hasPhoto ? undefined : onUploadPhoto}
+                >
+                  {hasPhoto ? (
+                    <img 
+                      src={photos[index].photos![0]} 
+                      alt={`Progress photo ${index + 1}`}
+                      className="object-cover w-full h-full"
+                    />
+                  ) : (
+                    <button className="flex flex-col items-center justify-center w-full h-full">
+                      <Upload className="h-8 w-8 text-muted-foreground mb-2" />
+                      <p className="text-sm font-medium">
+                        {index === 0 ? "Front View" : index === 1 ? "Side View" : "Back View"}
+                      </p>
+                    </button>
+                  )}
+                </div>
+              );
+            })}
           </div>
           
           <div className="flex flex-col md:flex-row gap-4">
             <Button 
               className="flex-1" 
               variant="outline" 
-              onClick={handleUploadPhoto}
+              onClick={onUploadPhoto}
             >
               <Upload className="mr-2 h-4 w-4" /> Upload Photos
             </Button>
@@ -94,6 +98,14 @@ const PhotoProgress: React.FC<PhotoProgressProps> = ({ photos = [] }) => {
           </div>
         </div>
       </CardContent>
+      
+      {photos.length >= 2 && (
+        <PhotoComparison 
+          photos={photos} 
+          open={isCompareOpen} 
+          onOpenChange={setIsCompareOpen} 
+        />
+      )}
     </Card>
   );
 };

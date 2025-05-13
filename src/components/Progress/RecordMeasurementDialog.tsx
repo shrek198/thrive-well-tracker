@@ -16,6 +16,14 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from '@/components/ui/tabs';
 import { Progress } from '@/types';
 import { useMeasurements } from '@/hooks/useMeasurements';
 import { useToast } from '@/hooks/use-toast';
+import { Textarea } from '@/components/ui/textarea';
+
+const samplePhotos = [
+  'https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?q=80&w=1740&auto=format&fit=crop&w=300&h=300',
+  'https://images.unsplash.com/photo-1605296867304-46d5465a13f1?q=80&w=1740&auto=format&fit=crop&w=300&h=300',
+  'https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?q=80&w=1740&auto=format&fit=crop&w=300&h=300',
+  'https://images.unsplash.com/photo-1594381898411-846e7d193883?q=80&w=1740&auto=format&fit=crop&w=300&h=300'
+];
 
 const RecordMeasurementDialog = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -43,6 +51,7 @@ const RecordMeasurementDialog = () => {
   const [photoData, setPhotoData] = useState({
     photoUrl: '',
     notes: '',
+    selectedSampleIndex: -1,
   });
 
   const handleSubmit = () => {
@@ -114,17 +123,26 @@ const RecordMeasurementDialog = () => {
         break;
 
       case 'photos':
-        if (!photoData.photoUrl) {
+        let photoUrl = '';
+        
+        if (photoData.selectedSampleIndex >= 0) {
+          photoUrl = samplePhotos[photoData.selectedSampleIndex];
+        } else if (photoData.photoUrl) {
+          photoUrl = photoData.photoUrl;
+        }
+        
+        if (!photoUrl) {
           toast({
             title: "Missing Information",
-            description: "Please provide a photo URL",
+            description: "Please provide a photo URL or select a sample photo",
             variant: "destructive"
           });
           return;
         }
-        newMeasurement.photos = [photoData.photoUrl];
+        
+        newMeasurement.photos = [photoUrl];
         successMessage = 'Progress photo recorded';
-        setPhotoData({ photoUrl: '', notes: '' });
+        setPhotoData({ photoUrl: '', notes: '', selectedSampleIndex: -1 });
         break;
     }
 
@@ -136,6 +154,13 @@ const RecordMeasurementDialog = () => {
     toast({
       title: "Measurement Recorded",
       description: successMessage,
+    });
+  };
+
+  const selectSamplePhoto = (index: number) => {
+    setPhotoData({
+      ...photoData,
+      selectedSampleIndex: photoData.selectedSampleIndex === index ? -1 : index
     });
   };
 
@@ -257,26 +282,47 @@ const RecordMeasurementDialog = () => {
           </TabsContent>
           
           <TabsContent value="photos" className="space-y-4 py-4">
-            <div className="space-y-2">
-              <Label htmlFor="photo-url">Photo URL</Label>
-              <Input
-                id="photo-url"
-                placeholder="e.g. https://example.com/my-progress-photo.jpg"
-                value={photoData.photoUrl}
-                onChange={(e) => setPhotoData({ ...photoData, photoUrl: e.target.value })}
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="photo-notes">Notes (Optional)</Label>
-              <Input
-                id="photo-notes"
-                placeholder="Add any notes about this photo"
-                value={photoData.notes}
-                onChange={(e) => setPhotoData({ ...photoData, notes: e.target.value })}
-              />
-            </div>
-            <div className="text-sm text-muted-foreground">
-              Upload your progress photos to visually track your transformation over time
+            <div className="space-y-4">
+              <div className="space-y-2">
+                <Label>Sample Photos (click to select)</Label>
+                <div className="grid grid-cols-4 gap-2">
+                  {samplePhotos.map((photo, index) => (
+                    <div 
+                      key={index}
+                      className={`aspect-square relative overflow-hidden rounded-md cursor-pointer border-2 ${photoData.selectedSampleIndex === index ? 'border-primary' : 'border-transparent'}`}
+                      onClick={() => selectSamplePhoto(index)}
+                    >
+                      <img 
+                        src={photo} 
+                        alt={`Sample photo ${index + 1}`}
+                        className="object-cover w-full h-full"
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
+              
+              <div className="text-center text-muted-foreground text-sm">- or -</div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="photo-url">Custom Photo URL</Label>
+                <Input
+                  id="photo-url"
+                  placeholder="e.g. https://example.com/my-progress-photo.jpg"
+                  value={photoData.photoUrl}
+                  onChange={(e) => setPhotoData({ ...photoData, photoUrl: e.target.value })}
+                  disabled={photoData.selectedSampleIndex >= 0}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="photo-notes">Notes (Optional)</Label>
+                <Textarea
+                  id="photo-notes"
+                  placeholder="Add any notes about this photo"
+                  value={photoData.notes}
+                  onChange={(e) => setPhotoData({ ...photoData, notes: e.target.value })}
+                />
+              </div>
             </div>
           </TabsContent>
         </Tabs>

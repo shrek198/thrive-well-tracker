@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import AppLayout from '@/components/Layout/AppLayout';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -26,6 +27,7 @@ const Progress = () => {
   const [activeTab, setActiveTab] = useState('overview');
   const [isViewAllOpen, setIsViewAllOpen] = useState(false);
   const [viewType, setViewType] = useState<'weight' | 'bodyFat' | 'measurements'>('weight');
+  const [isRecordDialogOpen, setIsRecordDialogOpen] = useState(false);
   const { toast } = useToast();
   
   const weightData = getMeasurementsByType('weight');
@@ -83,18 +85,17 @@ const Progress = () => {
       default: return 'Measurement History';
     }
   };
+  
+  const handleOpenRecordDialog = () => {
+    setIsRecordDialogOpen(true);
+  };
 
   const renderEmptyState = (type: string, buttonText: string) => (
     <div className="text-center p-8">
       <LineChart className="h-16 w-16 mx-auto opacity-20 mb-2" />
       <p className="mb-4">No {type} data recorded yet</p>
       <Button 
-        onClick={() => {
-          const button = document.querySelector('button[class*="gap-2"]:has(svg[data-lucide="plus"])');
-          if (button && button instanceof HTMLButtonElement) {
-            button.click();
-          }
-        }}
+        onClick={handleOpenRecordDialog}
       >
         {buttonText}
       </Button>
@@ -108,7 +109,9 @@ const Progress = () => {
           <h1 className="text-3xl font-bold mb-2">Progress Tracking</h1>
           <p className="text-muted-foreground">Monitor your fitness journey</p>
         </div>
-        <RecordMeasurementDialog />
+        <Button className="gap-2" onClick={handleOpenRecordDialog}>
+          <LineChart size={16} /> Record Measurement
+        </Button>
       </div>
       
       <Tabs defaultValue={activeTab} value={activeTab} onValueChange={setActiveTab} className="mb-8">
@@ -156,14 +159,7 @@ const Progress = () => {
                   <div className="h-[300px] flex flex-col items-center justify-center">
                     <LineChart className="h-16 w-16 mx-auto opacity-20 mb-2" />
                     <p className="mb-4">No weight data recorded yet</p>
-                    <Button 
-                      onClick={() => {
-                        const button = document.querySelector('button[class*="gap-2"]:has(svg[data-lucide="plus"])');
-                        if (button && button instanceof HTMLButtonElement) {
-                          button.click();
-                        }
-                      }}
-                    >
+                    <Button onClick={handleOpenRecordDialog}>
                       Record Weight
                     </Button>
                   </div>
@@ -206,14 +202,7 @@ const Progress = () => {
                   <div className="h-[300px] flex flex-col items-center justify-center">
                     <LineChart className="h-16 w-16 mx-auto opacity-20 mb-2" />
                     <p className="mb-4">No body fat data recorded yet</p>
-                    <Button 
-                      onClick={() => {
-                        const button = document.querySelector('button[class*="gap-2"]:has(svg[data-lucide="plus"])');
-                        if (button && button instanceof HTMLButtonElement) {
-                          button.click();
-                        }
-                      }}
-                    >
+                    <Button onClick={handleOpenRecordDialog}>
                       Record Body Fat
                     </Button>
                   </div>
@@ -259,12 +248,7 @@ const Progress = () => {
                       variant="outline" 
                       size="sm"
                       className="mt-4" 
-                      onClick={() => {
-                        const button = document.querySelector('button[class*="gap-2"]:has(svg[data-lucide="plus"])');
-                        if (button && button instanceof HTMLButtonElement) {
-                          button.click();
-                        }
-                      }}
+                      onClick={handleOpenRecordDialog}
                     >
                       Record Your First Measurement
                     </Button>
@@ -388,19 +372,15 @@ const Progress = () => {
             </CardHeader>
             <CardContent>
               {photosData.length > 0 ? (
-                <PhotoProgress photos={photosData} />
+                <PhotoProgress 
+                  photos={photosData}
+                  onUploadPhoto={handleOpenRecordDialog}
+                />
               ) : (
                 <div className="text-center p-8">
                   <Camera className="h-16 w-16 mx-auto opacity-20 mb-2" />
                   <p className="mb-4">No progress photos uploaded yet</p>
-                  <Button 
-                    onClick={() => {
-                      const button = document.querySelector('button[class*="gap-2"]:has(svg[data-lucide="plus"])');
-                      if (button && button instanceof HTMLButtonElement) {
-                        button.click();
-                      }
-                    }}
-                  >
+                  <Button onClick={handleOpenRecordDialog}>
                     Upload Your First Photo
                   </Button>
                 </div>
@@ -514,6 +494,9 @@ const Progress = () => {
           )}
         </DialogContent>
       </Dialog>
+      
+      {/* Record Measurement Dialog */}
+      <RecordMeasurementDialog />
     </AppLayout>
   );
 };
