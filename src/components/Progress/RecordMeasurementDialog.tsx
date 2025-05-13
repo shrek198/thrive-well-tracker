@@ -1,12 +1,11 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -25,11 +24,40 @@ const samplePhotos = [
   'https://images.unsplash.com/photo-1594381898411-846e7d193883?q=80&w=1740&auto=format&fit=crop&w=300&h=300'
 ];
 
-const RecordMeasurementDialog = () => {
+interface RecordMeasurementDialogProps {
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
+  defaultTab?: 'weight' | 'bodyfat' | 'measurements' | 'photos';
+}
+
+const RecordMeasurementDialog: React.FC<RecordMeasurementDialogProps> = ({ 
+  open, 
+  onOpenChange,
+  defaultTab = 'weight'
+}) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState<string>("weight");
+  const [activeTab, setActiveTab] = useState<string>(defaultTab);
   const { addMeasurement } = useMeasurements();
   const { toast } = useToast();
+
+  // Sync internal state with props
+  useEffect(() => {
+    if (open !== undefined) {
+      setIsDialogOpen(open);
+    }
+  }, [open]);
+
+  // Set active tab when defaultTab changes
+  useEffect(() => {
+    setActiveTab(defaultTab);
+  }, [defaultTab]);
+
+  const handleDialogChange = (open: boolean) => {
+    setIsDialogOpen(open);
+    if (onOpenChange) {
+      onOpenChange(open);
+    }
+  };
 
   // Form states for different types of measurements
   const [weightData, setWeightData] = useState({
@@ -150,7 +178,7 @@ const RecordMeasurementDialog = () => {
     addMeasurement(newMeasurement);
     
     // Close dialog and show success toast
-    setIsDialogOpen(false);
+    handleDialogChange(false);
     toast({
       title: "Measurement Recorded",
       description: successMessage,
@@ -165,12 +193,16 @@ const RecordMeasurementDialog = () => {
   };
 
   return (
-    <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-      <DialogTrigger asChild>
-        <Button className="gap-2">
-          <Plus size={16} /> Record Measurement
-        </Button>
-      </DialogTrigger>
+    <Dialog open={isDialogOpen} onOpenChange={handleDialogChange}>
+      {/* Dialog Trigger Button - Now only rendered when not controlled by props */}
+      {open === undefined && (
+        <DialogTrigger asChild>
+          <Button className="gap-2">
+            <Plus size={16} /> Record Measurement
+          </Button>
+        </DialogTrigger>
+      )}
+      
       <DialogContent className="sm:max-w-md">
         <DialogHeader>
           <DialogTitle>Record New Measurement</DialogTitle>
@@ -328,7 +360,7 @@ const RecordMeasurementDialog = () => {
         </Tabs>
         
         <div className="flex justify-end gap-2">
-          <Button variant="outline" onClick={() => setIsDialogOpen(false)}>
+          <Button variant="outline" onClick={() => handleDialogChange(false)}>
             Cancel
           </Button>
           <Button onClick={handleSubmit}>Save Measurement</Button>

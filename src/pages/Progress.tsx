@@ -4,7 +4,7 @@ import AppLayout from '@/components/Layout/AppLayout';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { LineChart, Camera, ArrowUpRight, Download } from 'lucide-react';
+import { LineChart, Camera, ArrowUpRight, Download, Weight, Ruler } from 'lucide-react';
 import { useMeasurements } from '@/hooks/useMeasurements';
 import MeasurementChart from '@/components/Progress/MeasurementChart';
 import MeasurementTable from '@/components/Progress/MeasurementTable';
@@ -28,6 +28,7 @@ const Progress = () => {
   const [isViewAllOpen, setIsViewAllOpen] = useState(false);
   const [viewType, setViewType] = useState<'weight' | 'bodyFat' | 'measurements'>('weight');
   const [isRecordDialogOpen, setIsRecordDialogOpen] = useState(false);
+  const [recordType, setRecordType] = useState<'weight' | 'bodyfat' | 'measurements' | 'photos'>('weight');
   const { toast } = useToast();
   
   const weightData = getMeasurementsByType('weight');
@@ -86,16 +87,19 @@ const Progress = () => {
     }
   };
   
-  const handleOpenRecordDialog = () => {
+  const handleOpenRecordDialog = (type?: 'weight' | 'bodyfat' | 'measurements' | 'photos') => {
+    if (type) {
+      setRecordType(type);
+    }
     setIsRecordDialogOpen(true);
   };
 
-  const renderEmptyState = (type: string, buttonText: string) => (
+  const renderEmptyState = (type: string, buttonText: string, recordType: 'weight' | 'bodyfat' | 'measurements' | 'photos') => (
     <div className="text-center p-8">
       <LineChart className="h-16 w-16 mx-auto opacity-20 mb-2" />
       <p className="mb-4">No {type} data recorded yet</p>
       <Button 
-        onClick={handleOpenRecordDialog}
+        onClick={() => handleOpenRecordDialog(recordType)}
       >
         {buttonText}
       </Button>
@@ -109,7 +113,7 @@ const Progress = () => {
           <h1 className="text-3xl font-bold mb-2">Progress Tracking</h1>
           <p className="text-muted-foreground">Monitor your fitness journey</p>
         </div>
-        <Button className="gap-2" onClick={handleOpenRecordDialog}>
+        <Button className="gap-2" onClick={() => handleOpenRecordDialog()}>
           <LineChart size={16} /> Record Measurement
         </Button>
       </div>
@@ -157,9 +161,9 @@ const Progress = () => {
                   />
                 ) : (
                   <div className="h-[300px] flex flex-col items-center justify-center">
-                    <LineChart className="h-16 w-16 mx-auto opacity-20 mb-2" />
+                    <Weight className="h-16 w-16 mx-auto opacity-20 mb-2" />
                     <p className="mb-4">No weight data recorded yet</p>
-                    <Button onClick={handleOpenRecordDialog}>
+                    <Button onClick={() => handleOpenRecordDialog('weight')}>
                       Record Weight
                     </Button>
                   </div>
@@ -202,7 +206,7 @@ const Progress = () => {
                   <div className="h-[300px] flex flex-col items-center justify-center">
                     <LineChart className="h-16 w-16 mx-auto opacity-20 mb-2" />
                     <p className="mb-4">No body fat data recorded yet</p>
-                    <Button onClick={handleOpenRecordDialog}>
+                    <Button onClick={() => handleOpenRecordDialog('bodyfat')}>
                       Record Body Fat
                     </Button>
                   </div>
@@ -242,13 +246,10 @@ const Progress = () => {
                   />
                 ) : (
                   <div className="h-[300px] flex flex-col items-center justify-center">
-                    <LineChart className="h-16 w-16 mx-auto opacity-20 mb-2" />
+                    <Ruler className="h-16 w-16 mx-auto opacity-20 mb-2" />
                     <p className="mb-4">No measurements recorded yet</p>
                     <Button 
-                      variant="outline" 
-                      size="sm"
-                      className="mt-4" 
-                      onClick={handleOpenRecordDialog}
+                      onClick={() => handleOpenRecordDialog('measurements')}
                     >
                       Record Your First Measurement
                     </Button>
@@ -281,9 +282,7 @@ const Progress = () => {
                     <Camera className="h-16 w-16 mx-auto opacity-20 mb-2" />
                     <p className="mb-4 text-center">No progress photos uploaded yet</p>
                     <Button 
-                      variant="outline" 
-                      size="sm"
-                      onClick={() => setActiveTab('photos')}
+                      onClick={() => handleOpenRecordDialog('photos')}
                     >
                       Upload Photos
                     </Button>
@@ -326,7 +325,7 @@ const Progress = () => {
                   </div>
                 </div>
               ) : (
-                renderEmptyState('weight', 'Record Weight')
+                renderEmptyState('weight', 'Record Weight', 'weight')
               )}
             </CardContent>
           </Card>
@@ -359,7 +358,7 @@ const Progress = () => {
                   </div>
                 </div>
               ) : (
-                renderEmptyState('body measurement', 'Record Measurements')
+                renderEmptyState('body measurement', 'Record Measurements', 'measurements')
               )}
             </CardContent>
           </Card>
@@ -374,13 +373,13 @@ const Progress = () => {
               {photosData.length > 0 ? (
                 <PhotoProgress 
                   photos={photosData}
-                  onUploadPhoto={handleOpenRecordDialog}
+                  onUploadPhoto={() => handleOpenRecordDialog('photos')}
                 />
               ) : (
                 <div className="text-center p-8">
                   <Camera className="h-16 w-16 mx-auto opacity-20 mb-2" />
                   <p className="mb-4">No progress photos uploaded yet</p>
-                  <Button onClick={handleOpenRecordDialog}>
+                  <Button onClick={() => handleOpenRecordDialog('photos')}>
                     Upload Your First Photo
                   </Button>
                 </div>
@@ -427,7 +426,7 @@ const Progress = () => {
                   </div>
                 </>
               ) : (
-                renderEmptyState('weight', 'Record Weight')
+                renderEmptyState('weight', 'Record Weight', 'weight')
               )}
             </div>
           )}
@@ -459,7 +458,7 @@ const Progress = () => {
                   </div>
                 </>
               ) : (
-                renderEmptyState('body fat', 'Record Body Fat')
+                renderEmptyState('body fat', 'Record Body Fat', 'bodyfat')
               )}
             </div>
           )}
@@ -488,15 +487,19 @@ const Progress = () => {
                   </div>
                 </>
               ) : (
-                renderEmptyState('measurements', 'Record Measurements')
+                renderEmptyState('measurements', 'Record Measurements', 'measurements')
               )}
             </div>
           )}
         </DialogContent>
       </Dialog>
       
-      {/* Record Measurement Dialog */}
-      <RecordMeasurementDialog />
+      {/* Record Measurement Dialog with the selected type */}
+      <RecordMeasurementDialog 
+        open={isRecordDialogOpen}
+        onOpenChange={setIsRecordDialogOpen}
+        defaultTab={recordType}
+      />
     </AppLayout>
   );
 };
