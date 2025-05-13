@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import {
   Dialog,
@@ -28,12 +29,14 @@ interface RecordMeasurementDialogProps {
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
   defaultTab?: 'weight' | 'bodyfat' | 'measurements' | 'photos';
+  onSave?: () => void;
 }
 
 const RecordMeasurementDialog: React.FC<RecordMeasurementDialogProps> = ({ 
   open, 
   onOpenChange,
-  defaultTab = 'weight'
+  defaultTab = 'weight',
+  onSave
 }) => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<string>(defaultTab);
@@ -176,6 +179,11 @@ const RecordMeasurementDialog: React.FC<RecordMeasurementDialogProps> = ({
 
     // Save the measurement
     addMeasurement(newMeasurement);
+    
+    // Notify parent component that measurement was saved
+    if (onSave) {
+      onSave();
+    }
     
     // Close dialog and show success toast
     handleDialogChange(false);

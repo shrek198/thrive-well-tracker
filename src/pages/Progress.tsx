@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import AppLayout from '@/components/Layout/AppLayout';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -31,6 +30,10 @@ const Progress = () => {
   const [recordType, setRecordType] = useState<'weight' | 'bodyfat' | 'measurements' | 'photos'>('weight');
   const { toast } = useToast();
   
+  // This state keeps track of when data has been refreshed
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
+  
+  // Use the refreshTrigger state to force the component to get fresh data
   const weightData = getMeasurementsByType('weight');
   const bodyFatData = getMeasurementsByType('bodyFat');
   const measurementsData = getMeasurementsByType('measurements');
@@ -76,6 +79,12 @@ const Progress = () => {
       title: "Export Successful",
       description: `Your data has been exported to ${filename}`
     });
+  };
+
+  // This function will be called after a measurement is saved
+  const handleMeasurementSaved = () => {
+    // Increment the refresh trigger to force a re-render with fresh data
+    setRefreshTrigger(prev => prev + 1);
   };
 
   const getTitleForViewType = () => {
@@ -499,6 +508,7 @@ const Progress = () => {
         open={isRecordDialogOpen}
         onOpenChange={setIsRecordDialogOpen}
         defaultTab={recordType}
+        onSave={handleMeasurementSaved}
       />
     </AppLayout>
   );
