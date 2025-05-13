@@ -85,6 +85,7 @@
 
     /* Ensure fitness-specific colors are also themed */
     --fitness-background: 222.2 84% 4.9%;
+    --fitness-text: 210 40% 98%;
   }
 }
 
@@ -98,6 +99,12 @@
     font-feature-settings: "rlig" 1, "calt" 1;
   }
 
+  /* Fix for specific sections that need to maintain styles in dark mode */
+  .dark .hero-section,
+  .dark .cta-section {
+    @apply text-white;
+  }
+  
   /* Ensure all white backgrounds get themed properly */
   .dark .bg-white {
     @apply bg-background;
@@ -106,6 +113,16 @@
   /* Fix for white backgrounds in cards when in dark mode */
   .dark .fitness-stat {
     @apply bg-card;
+  }
+  
+  /* Fix for auth page background areas */
+  .dark .auth-primary-section {
+    @apply bg-primary text-primary-foreground;
+  }
+  
+  /* Fix for landing page components */
+  .dark .testimonial-card {
+    @apply bg-card text-card-foreground;
   }
 }
 

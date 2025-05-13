@@ -85,8 +85,8 @@ const Auth = () => {
       
       {/* Auth Form Section with padding for navbar */}
       <div className="flex flex-col md:flex-row pt-20">
-        {/* Hero Section - preserve original styling regardless of theme */}
-        <div className="bg-primary flex-1 flex flex-col justify-center items-center p-6 md:p-12 text-white !important">
+        {/* Hero Section - add auth-primary-section class for dark mode consistency */}
+        <div className="auth-primary-section bg-primary flex-1 flex flex-col justify-center items-center p-6 md:p-12 text-white">
           <div className="max-w-md text-center md:text-left">
             <div className="flex justify-center md:justify-start mb-6">
               <Activity className="h-12 w-12" />

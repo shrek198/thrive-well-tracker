@@ -44,15 +44,15 @@ const AuthForm = () => {
   };
 
   return (
-    <Card className="w-full max-w-md">
+    <Card className="w-full max-w-md bg-card text-card-foreground">
       <CardHeader className="space-y-1 flex flex-col items-center">
         <div className="flex items-center justify-center mb-2 bg-primary/10 p-2 rounded-full">
-          <Activity className="h-10 w-10 text-fitness-primary" />
+          <Activity className="h-10 w-10 text-primary" />
         </div>
-        <CardTitle className="text-2xl">
+        <CardTitle className="text-2xl text-foreground">
           {mode === 'login' ? 'Welcome back' : 'Create an account'}
         </CardTitle>
-        <CardDescription>
+        <CardDescription className="text-muted-foreground">
           {mode === 'login'
             ? 'Enter your credentials to access your account'
             : 'Enter your information to create an account'}
@@ -62,7 +62,7 @@ const AuthForm = () => {
         <CardContent className="space-y-4">
           {mode === 'register' && (
             <div className="space-y-2">
-              <Label htmlFor="name">Name</Label>
+              <Label htmlFor="name" className="text-foreground">Name</Label>
               <Input
                 id="name"
                 name="name"
@@ -70,11 +70,12 @@ const AuthForm = () => {
                 required
                 value={formData.name}
                 onChange={handleChange}
+                className="bg-background text-foreground"
               />
             </div>
           )}
           <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
+            <Label htmlFor="email" className="text-foreground">Email</Label>
             <Input
               id="email"
               name="email"
@@ -83,10 +84,11 @@ const AuthForm = () => {
               required
               value={formData.email}
               onChange={handleChange}
+              className="bg-background text-foreground"
             />
           </div>
           <div className="space-y-2">
-            <Label htmlFor="password">Password</Label>
+            <Label htmlFor="password" className="text-foreground">Password</Label>
             <Input
               id="password"
               name="password"
@@ -94,16 +96,17 @@ const AuthForm = () => {
               required
               value={formData.password}
               onChange={handleChange}
+              className="bg-background text-foreground"
             />
           </div>
         </CardContent>
         <CardFooter className="flex flex-col space-y-4">
-          <Button type="submit" className="w-full bg-fitness-primary hover:bg-blue-600">
+          <Button type="submit" className="w-full bg-fitness-primary hover:bg-blue-600 text-white">
             {mode === 'login' ? 'Sign In' : 'Create Account'}
           </Button>
           <div className="text-sm text-center text-muted-foreground">
             {mode === 'login' ? "Don't have an account? " : "Already have an account? "}
-            <Button variant="link" type="button" onClick={toggleMode} className="p-0">
+            <Button variant="link" type="button" onClick={toggleMode} className="p-0 text-primary">
               {mode === 'login' ? 'Sign up' : 'Sign in'}
             </Button>
           </div>

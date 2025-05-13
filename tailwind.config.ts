@@ -63,13 +63,13 @@ export default {
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
 				},
-				// Custom fitness tracker theme colors
+				// Custom fitness tracker theme colors - ensuring they work in both light/dark
 				fitness: {
 					primary: '#3B82F6',
 					secondary: '#10B981', 
 					accent: '#F59E0B',
-					background: '#F9FAFB',
-					text: '#1F2937',
+					background: 'hsl(var(--background))',
+					text: 'hsl(var(--foreground))',
 				}
 			},
 			borderRadius: {

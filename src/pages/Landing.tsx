@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Activity, PieChart, Calendar, Weight, Menu, User } from 'lucide-react';
@@ -113,7 +114,7 @@ const Landing = () => {
       </nav>
 
       {/* Hero Section with padding for navbar - preserved regardless of theme */}
-      <header className="bg-gradient-to-br from-primary/90 to-primary text-white pt-20 !important">
+      <header className="hero-section bg-gradient-to-br from-primary/90 to-primary text-white pt-20">
         <div className="container mx-auto px-4 py-16 md:py-24">
           <div className="max-w-3xl mx-auto text-center">
             <div className="flex justify-center mb-6">
@@ -136,14 +137,14 @@ const Landing = () => {
       {/* Features Section */}
       <section id="features" className="py-16 bg-background scroll-mt-20">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-12">Everything You Need To Reach Your Fitness Goals</h2>
+          <h2 className="text-3xl font-bold text-center mb-12 text-foreground">Everything You Need To Reach Your Fitness Goals</h2>
           
           <div className="grid md:grid-cols-3 gap-8">
             <div className="bg-card/60 backdrop-blur-sm p-8 rounded-lg text-center shadow-md hover:shadow-lg transition-all">
               <div className="bg-primary/10 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
                 <Activity className="h-8 w-8 text-primary" />
               </div>
-              <h3 className="text-xl font-semibold mb-3">Track Workouts</h3>
+              <h3 className="text-xl font-semibold mb-3 text-foreground">Track Workouts</h3>
               <p className="text-muted-foreground">Log exercises, sets, reps, and duration to keep track of your fitness journey.</p>
             </div>
             
@@ -151,7 +152,7 @@ const Landing = () => {
               <div className="bg-secondary/10 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
                 <PieChart className="h-8 w-8 text-secondary" />
               </div>
-              <h3 className="text-xl font-semibold mb-3">Monitor Nutrition</h3>
+              <h3 className="text-xl font-semibold mb-3 text-foreground">Monitor Nutrition</h3>
               <p className="text-muted-foreground">Track meals, calories, and macronutrients to optimize your diet.</p>
             </div>
             
@@ -159,7 +160,7 @@ const Landing = () => {
               <div className="bg-accent/10 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
                 <Weight className="h-8 w-8 text-accent" />
               </div>
-              <h3 className="text-xl font-semibold mb-3">Visualize Progress</h3>
+              <h3 className="text-xl font-semibold mb-3 text-foreground">Visualize Progress</h3>
               <p className="text-muted-foreground">See your progress with detailed charts and statistics to stay motivated.</p>
             </div>
           </div>
@@ -169,42 +170,42 @@ const Landing = () => {
       {/* Testimonials Section */}
       <section id="testimonials" className="py-16 bg-muted/30 scroll-mt-20">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-12">What Our Users Say</h2>
+          <h2 className="text-3xl font-bold text-center mb-12 text-foreground">What Our Users Say</h2>
           
           <div className="grid md:grid-cols-3 gap-8">
-            <div className="bg-card p-6 rounded-lg shadow-sm hover:shadow-md transition-all">
+            <div className="testimonial-card bg-card p-6 rounded-lg shadow-sm hover:shadow-md transition-all">
               <div className="flex items-center mb-4">
                 <div className="w-12 h-12 bg-primary/20 rounded-full mr-4 flex items-center justify-center">
                   <span className="text-lg font-bold text-primary">SJ</span>
                 </div>
                 <div>
-                  <h4 className="font-semibold">Sarah J.</h4>
+                  <h4 className="font-semibold text-foreground">Sarah J.</h4>
                   <p className="text-sm text-muted-foreground">Lost 15 lbs in 3 months</p>
                 </div>
               </div>
               <p className="text-card-foreground">"FitTracker helped me stay consistent with my workouts and nutrition. The progress charts keep me motivated!"</p>
             </div>
             
-            <div className="bg-card p-6 rounded-lg shadow-sm hover:shadow-md transition-all">
+            <div className="testimonial-card bg-card p-6 rounded-lg shadow-sm hover:shadow-md transition-all">
               <div className="flex items-center mb-4">
                 <div className="w-12 h-12 bg-primary/20 rounded-full mr-4 flex items-center justify-center">
                   <span className="text-lg font-bold text-primary">MT</span>
                 </div>
                 <div>
-                  <h4 className="font-semibold">Mike T.</h4>
+                  <h4 className="font-semibold text-foreground">Mike T.</h4>
                   <p className="text-sm text-muted-foreground">Gained 10 lbs of muscle</p>
                 </div>
               </div>
               <p className="text-card-foreground">"The workout tracking feature is perfect for my strength training. I can see my progress week by week."</p>
             </div>
             
-            <div className="bg-card p-6 rounded-lg shadow-sm hover:shadow-md transition-all">
+            <div className="testimonial-card bg-card p-6 rounded-lg shadow-sm hover:shadow-md transition-all">
               <div className="flex items-center mb-4">
                 <div className="w-12 h-12 bg-primary/20 rounded-full mr-4 flex items-center justify-center">
                   <span className="text-lg font-bold text-primary">LK</span>
                 </div>
                 <div>
-                  <h4 className="font-semibold">Lisa K.</h4>
+                  <h4 className="font-semibold text-foreground">Lisa K.</h4>
                   <p className="text-sm text-muted-foreground">Marathon runner</p>
                 </div>
               </div>
@@ -217,7 +218,7 @@ const Landing = () => {
       {/* Registration Section */}
       <section id="register" className="py-16 bg-background scroll-mt-20">
         <div className="container mx-auto px-4">
-          <h2 className="text-3xl font-bold text-center mb-12">Join FitTracker Today</h2>
+          <h2 className="text-3xl font-bold text-center mb-12 text-foreground">Join FitTracker Today</h2>
           
           <div className="max-w-md mx-auto">
             <Card className="border shadow-lg hover:shadow-xl transition-all">
@@ -255,7 +256,7 @@ const Landing = () => {
       </section>
 
       {/* CTA Section - preserved regardless of theme */}
-      <section className="py-16 bg-gradient-to-br from-primary/90 to-primary text-white !important">
+      <section className="cta-section py-16 bg-gradient-to-br from-primary/90 to-primary text-white">
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-3xl font-bold mb-6">Ready to Transform Your Fitness Journey?</h2>
           <p className="text-xl mb-8 max-w-2xl mx-auto">Join thousands of users who have already improved their health and fitness with FitTracker.</p>
@@ -279,7 +280,7 @@ const Landing = () => {
             
             <div className="grid grid-cols-2 md:grid-cols-3 gap-8">
               <div>
-                <h5 className="font-semibold mb-4">Features</h5>
+                <h5 className="font-semibold mb-4 text-foreground">Features</h5>
                 <ul className="space-y-2">
                   <li><button onClick={() => scrollToSection('features')} className="text-muted-foreground hover:text-foreground">Workout Tracking</button></li>
                   <li><button onClick={() => scrollToSection('features')} className="text-muted-foreground hover:text-foreground">Nutrition Monitoring</button></li>
@@ -288,7 +289,7 @@ const Landing = () => {
               </div>
               
               <div>
-                <h5 className="font-semibold mb-4">Resources</h5>
+                <h5 className="font-semibold mb-4 text-foreground">Resources</h5>
                 <ul className="space-y-2">
                   <li><a href="#" className="text-muted-foreground hover:text-foreground">Blog</a></li>
                   <li><a href="#" className="text-muted-foreground hover:text-foreground">Guides</a></li>
@@ -297,7 +298,7 @@ const Landing = () => {
               </div>
               
               <div>
-                <h5 className="font-semibold mb-4">Company</h5>
+                <h5 className="font-semibold mb-4 text-foreground">Company</h5>
                 <ul className="space-y-2">
                   <li><a href="#" className="text-muted-foreground hover:text-foreground">About</a></li>
                   <li><a href="#" className="text-muted-foreground hover:text-foreground">Privacy</a></li>
