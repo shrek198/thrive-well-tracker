@@ -69,6 +69,7 @@ const Navbar = () => {
           </div>
 
           <div className="hidden md:flex items-center space-x-1">
+            <ThemeToggle />
             <Link to="/dashboard" className="px-3 py-2 rounded-md hover:bg-muted text-foreground">Dashboard</Link>
             <Link to="/workouts" className="px-3 py-2 rounded-md hover:bg-muted text-foreground">Workouts</Link>
             <Link to="/nutrition" className="px-3 py-2 rounded-md hover:bg-muted text-foreground">Nutrition</Link>
@@ -76,8 +77,6 @@ const Navbar = () => {
           </div>
 
           <div className="flex items-center gap-2">
-            <ThemeToggle />
-            
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="icon" className="rounded-full">

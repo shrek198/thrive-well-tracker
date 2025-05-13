@@ -32,6 +32,7 @@ const Auth = () => {
             <div className="hidden md:flex items-center space-x-1">
               <NavigationMenu>
                 <NavigationMenuList>
+                  <ThemeToggle />
                   <Link to="/" className={navigationMenuTriggerStyle()}>
                     Home
                   </Link>
@@ -45,7 +46,6 @@ const Auth = () => {
               </NavigationMenu>
               
               <div className="ml-4 flex items-center gap-2">
-                <ThemeToggle />
                 <Button asChild variant="outline">
                   <Link to="/auth">Log In</Link>
                 </Button>
@@ -85,8 +85,8 @@ const Auth = () => {
       
       {/* Auth Form Section with padding for navbar */}
       <div className="flex flex-col md:flex-row pt-20">
-        {/* Hero Section */}
-        <div className="bg-primary flex-1 flex flex-col justify-center items-center p-6 md:p-12 text-white">
+        {/* Hero Section - preserve original styling regardless of theme */}
+        <div className="bg-primary flex-1 flex flex-col justify-center items-center p-6 md:p-12 text-white !important">
           <div className="max-w-md text-center md:text-left">
             <div className="flex justify-center md:justify-start mb-6">
               <Activity className="h-12 w-12" />

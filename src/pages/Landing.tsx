@@ -1,12 +1,11 @@
-
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Activity, PieChart, Calendar, Weight, Menu, User, ChevronDown } from 'lucide-react';
+import { Activity, PieChart, Calendar, Weight, Menu, User } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { NavigationMenu, NavigationMenuContent, NavigationMenuItem, NavigationMenuLink, NavigationMenuList, NavigationMenuTrigger, navigationMenuTriggerStyle } from '@/components/ui/navigation-menu';
+import { NavigationMenu, NavigationMenuItem, NavigationMenuLink, NavigationMenuList, NavigationMenuTrigger, navigationMenuTriggerStyle } from '@/components/ui/navigation-menu';
 import ThemeToggle from '@/components/Layout/ThemeToggle';
 
 const Landing = () => {
@@ -35,6 +34,7 @@ const Landing = () => {
             <div className="hidden md:flex items-center space-x-1">
               <NavigationMenu>
                 <NavigationMenuList>
+                  <ThemeToggle />
                   <NavigationMenuItem>
                     <button 
                       onClick={() => scrollToSection('features')} 
@@ -63,7 +63,6 @@ const Landing = () => {
               </NavigationMenu>
               
               <div className="flex items-center gap-2 ml-4">
-                <ThemeToggle />
                 <Button asChild variant="outline">
                   <Link to="/auth">Log In</Link>
                 </Button>
@@ -113,8 +112,8 @@ const Landing = () => {
         </div>
       </nav>
 
-      {/* Hero Section with padding for navbar */}
-      <header className="bg-gradient-to-br from-primary/90 to-primary text-white pt-20">
+      {/* Hero Section with padding for navbar - preserved regardless of theme */}
+      <header className="bg-gradient-to-br from-primary/90 to-primary text-white pt-20 !important">
         <div className="container mx-auto px-4 py-16 md:py-24">
           <div className="max-w-3xl mx-auto text-center">
             <div className="flex justify-center mb-6">
@@ -255,8 +254,8 @@ const Landing = () => {
         </div>
       </section>
 
-      {/* CTA Section */}
-      <section className="py-16 bg-gradient-to-br from-primary/90 to-primary text-white">
+      {/* CTA Section - preserved regardless of theme */}
+      <section className="py-16 bg-gradient-to-br from-primary/90 to-primary text-white !important">
         <div className="container mx-auto px-4 text-center">
           <h2 className="text-3xl font-bold mb-6">Ready to Transform Your Fitness Journey?</h2>
           <p className="text-xl mb-8 max-w-2xl mx-auto">Join thousands of users who have already improved their health and fitness with FitTracker.</p>
